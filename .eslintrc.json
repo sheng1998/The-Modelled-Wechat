@@ -1,0 +1,50 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true,
+    // 开启setup语法糖环境
+    "vue/setup-compiler-macros": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/vue3-recommended",
+    "plugin:@typescript-eslint/recommended",
+    // 使用爱彼迎语法规范
+    "airbnb",
+    // ! 注意如果没有该文件会报错
+    // 因为项目中使用了自动导入的库，所以需要加载相应的eslint配置
+    "./.eslintrc-auto-import.json"
+  ],
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "parser": "@typescript-eslint/parser",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "vue",
+    "@typescript-eslint"
+  ],
+  "rules": {
+    // 忽略检测换行风格
+    "linebreak-style": "off",
+    // 关闭html属性自动换行规则
+    "vue/max-attributes-per-line": "off",
+    // 修改html标签自闭合规则
+    "vue/html-self-closing": [
+      "error",
+      {
+        "html": {
+          "void": "never",
+          "normal": "any",
+          "component": "any"
+        },
+        "svg": "always",
+        "math": "always"
+      }
+    ],
+    // 别名引入会报错，暂时关闭该规则（尚未找到好的解决办法）
+    "import/no-unresolved": "off"
+  }
+}

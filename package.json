@@ -1,0 +1,37 @@
+{
+  "name": "wechat",
+  "private": true,
+  "version": "0.0.0",
+  "description": "A Vue3 + Vite3 + Element-Plus2 project",
+  "author": "sheng <zeguwx@163.com>",
+  "scripts": {
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx,.vue",
+    "lint:fix": "eslint src --fix --ext .js,.jsx,.ts,.tsx,.vue",
+    "predev": "npm run lint",
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "element-plus": "^2.2.11",
+    "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.30",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "@vitejs/plugin-vue": "^3.0.0",
+    "@vitejs/plugin-vue-jsx": "^2.0.0",
+    "eslint": "^8.14.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-vue": "^8.7.1",
+    "sass": "^1.51.0",
+    "typescript": "^4.6.4",
+    "unplugin-auto-import": "^0.7.1",
+    "unplugin-vue-components": "^0.19.3",
+    "vite": "^3.0.0",
+    "vue-tsc": "^0.38.4"
+  }
+}
