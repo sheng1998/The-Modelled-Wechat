@@ -50,6 +50,34 @@ export default defineConfig({
     open: true,
     // 将 host 设置为 0.0.0.0 支持通过 ip 访问启动的项目
     host: '0.0.0.0',
+    port: 8888,
+  },
+  build: {
+    target: 'chrome63',
+    outDir: 'dist',
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: (chunkInfo) => {
+          const name = chunkInfo.name;
+          if (name.endsWith('.ttf') || name.endsWith('.woff') || name.endsWith('.woff2')) {
+            return 'assets/font/[name]-[hash].[ext]';
+          } else if (
+            name.endsWith('.png') ||
+            name.endsWith('.jpg') ||
+            name.endsWith('.jpeg') ||
+            name.endsWith('.webp') ||
+            name.endsWith('.svg') ||
+            name.endsWith('.gif')
+          ) {
+            return 'assets/image/[ext]/[name]-[hash].[ext]';
+          }
+          return 'assets/[ext]/[name]-[hash].[ext]';
+        },
+      },
+    },
   },
   resolve: {
     // 配置路径别名
