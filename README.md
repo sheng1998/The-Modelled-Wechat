@@ -13,21 +13,25 @@
 ## 项目初始化和构建流程
 
 ### 1、依赖包安装
-```
+
+```shell
 npm install
 ```
 
 ### 2、运行开发服
-```
+
+```shell
 npm run dev
 ```
 
 ### 3、项目构建
-```
+
+```shell
 npm run build
 ```
 
 ### 4、文件 eslint 检测并修复文件 eslint 报错
-```
+
+```shell
 npm run lint:fix
 ```
