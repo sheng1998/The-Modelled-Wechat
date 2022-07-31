@@ -3,7 +3,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/login/indesx.vue'),
+    component: () => import('@/views/login/index.vue'),
   },
 ];
 
