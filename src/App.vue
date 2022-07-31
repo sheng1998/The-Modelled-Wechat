@@ -1,3 +1,7 @@
 <template>
-  <el-card>The Modelled Wechat!</el-card>
+  <login></login>
 </template>
+
+<script setup lang='ts'>
+import Login from '@/views/login/index.vue';
+</script>
