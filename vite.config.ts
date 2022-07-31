@@ -1,7 +1,9 @@
 const path = require('path');
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import vueJsx from '@vitejs/plugin-vue-jsx'
+import vueJsx from '@vitejs/plugin-vue-jsx';
+import legacy from '@vitejs/plugin-legacy';
+import { createHtmlPlugin } from 'vite-plugin-html'
 
 // 自动按需引入相关第三方库
 import AutoImport from 'unplugin-auto-import/vite'
@@ -13,6 +15,7 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
+    createHtmlPlugin({ minify: true }),
     AutoImport({
       // 这里除了引入 vue 以外还可以引入pinia、vue-router、vueuse等，
       // 甚至你还可以使用自定义的配置规则，见 https://github.com/antfu/unplugin-auto-import#configuration
@@ -44,6 +47,30 @@ export default defineConfig({
       // 需要将生成的配置文件加到 .eslintignore 中
       dts: './src/components.d.ts'
     }),
+    legacy({
+      targets: ['Firefox 54', 'chrome 48', 'ie >= 11'],
+      additionalLegacyPolyfills: ['regenerator-runtime/runtime'], // 面向IE11时需要此插件
+      renderLegacyChunks: true,
+      polyfills: [
+        'es.symbol',
+        'es.array.filter',
+        'es.promise',
+        'es.promise.finally',
+        'es/map',
+        'es/set',
+        'es.array.for-each',
+        'es.object.define-properties',
+        'es.object.define-property',
+        'es.object.get-own-property-descriptor',
+        'es.object.get-own-property-descriptors',
+        'es.object.keys',
+        'es.object.to-string',
+        'web.dom-collections.for-each',
+        'esnext.global-this',
+        'esnext.string.match-all'
+      ],
+      modernPolyfills: ['es.string.replace-all'],
+    }),
   ],
   server: {
     // 自动打开浏览器
@@ -53,6 +80,7 @@ export default defineConfig({
     port: 8888,
   },
   build: {
+    minify: 'terser',
     target: 'chrome63',
     outDir: 'dist',
     assetsDir: 'assets',
@@ -76,6 +104,12 @@ export default defineConfig({
           }
           return 'assets/[ext]/[name]-[hash].[ext]';
         },
+      },
+    },
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
       },
     },
   },
