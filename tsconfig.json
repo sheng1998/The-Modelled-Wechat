@@ -14,10 +14,11 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@": ["src"],
-      "$style": ["src/assets/css"],
+      "$style/*": ["src/assets/css/*"],
+      "@/*": ["src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules", "dist", ".history"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
