@@ -49,6 +49,7 @@ import { View, Hide } from '@element-plus/icons-vue';
 
 const type = ref<'login' | 'register'>('login');
 const changeType = (value: 'login' | 'register') => {
+  // TODO 切换路由query
   type.value = value;
 };
 
