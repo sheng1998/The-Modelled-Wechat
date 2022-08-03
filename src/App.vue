@@ -1,7 +1,14 @@
 <template>
-  <login></login>
+  <LoginOrRegister></LoginOrRegister>
 </template>
 
 <script setup lang='ts'>
-import Login from '@/views/login/index.vue';
+import LoginOrRegister from '@/views/login_or_register/index.vue';
 </script>
+
+<style lang="scss">
+#app {
+  width: 100%;
+  height: 100%;
+}
+</style>
