@@ -43,50 +43,50 @@ const passwordVisible = ref(false);
 <style lang="scss" scoped>
 @import './common.scss';
 .form {
-      .input-wrap {
-        position: relative;
-        width: 100%;
-        + .input-wrap {
-          margin-top: 28px;
-        }
-        &::after {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 1px;
-          @include backgroundImage(right);
-          content: '';
-        }
-      }
-      input {
-        width: 100%;
-        border: none;
-        outline:none;
-        padding: 10px;
-      }
-      .password {
-        :deep(.el-icon) {
-          position: absolute;
-          right: 10px;
-          top:50%;
-          transform:translateY(-50%);
-          cursor: pointer;
-        }
-      }
-      button {
-        width: 100%;
-        height: 36px;
-        margin-top: 52px;
-        border-radius: 8px;
-        border: none;
-        outline:none;
-        letter-spacing: 6px;
-        font-size: 16px;
-        font-weight: 600;
-        color: #fff;
-        @include backgroundImage(right);
-        cursor: pointer;
-      }
+  .input-wrap {
+    position: relative;
+    width: 100%;
+    + .input-wrap {
+      margin-top: 28px;
     }
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      @include backgroundImage(right);
+      content: '';
+    }
+  }
+  input {
+    width: 100%;
+    border: none;
+    outline:none;
+    padding: 10px;
+  }
+  .password {
+    :deep(.el-icon) {
+      position: absolute;
+      right: 10px;
+      top:50%;
+      transform:translateY(-50%);
+      cursor: pointer;
+    }
+  }
+  button {
+    width: 100%;
+    height: 36px;
+    margin-top: 52px;
+    border-radius: 8px;
+    border: none;
+    outline:none;
+    letter-spacing: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    @include backgroundImage(right);
+    cursor: pointer;
+  }
+}
 </style>
