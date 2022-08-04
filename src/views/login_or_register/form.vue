@@ -1,43 +1,162 @@
 <template>
   <div class="form">
     <div class="input-wrap">
-      <input v-model="username" type="text" placeholder="用户名">
+      <input v-model="username" type="text" placeholder="用户名" @input="checkUsername">
+      <div v-if="usernameErrorTip" class="error-tip">
+        {{ usernameErrorTip }}
+      </div>
     </div>
     <div class="password input-wrap">
-      <input v-model="password" :type="passwordVisible ? 'text' : 'password'" placeholder="密码">
+      <input
+        v-model="password"
+        :type="passwordVisible ? 'text' : 'password'"
+        placeholder="密码"
+        @input="passwordChange"
+      >
+      <div v-if="passwordErrorTip" class="error-tip">
+        {{ passwordErrorTip }}
+      </div>
       <el-icon @click="passwordVisible = !passwordVisible">
         <Hide v-if="passwordVisible" />
         <View v-else />
       </el-icon>
     </div>
-    <button v-if="type === 'login'">
+    <div v-if="type === 'register'" class="password password-again input-wrap">
+      <input
+        v-model="password2"
+        :type="passwordVisible ? 'text' : 'password'"
+        placeholder="再次输入密码"
+        @input="checkPasswordSame"
+      >
+      <div v-if="password2ErrorTip" class="error-tip">
+        {{ password2ErrorTip }}
+      </div>
+      <el-icon @click="passwordVisible = !passwordVisible">
+        <Hide v-if="passwordVisible" />
+        <View v-else />
+      </el-icon>
+    </div>
+    <button v-if="type === 'login'" @click="toLogin">
       登录
     </button>
-    <button v-else>
+    <button v-else @click="toRegister">
       注册
     </button>
   </div>
 </template>
 
 <script setup lang='ts'>
+import { PropType, ref, watch } from 'vue';
+import { ElIcon, ElMessage } from 'element-plus';
 import { View, Hide } from '@element-plus/icons-vue';
-import { PropType } from 'vue';
 
-defineProps({
+const props = defineProps({
   type: String as PropType<'login' | 'register'>,
 });
+const emit = defineEmits(['login', 'register']);
 
 const username = ref('');
+const usernameErrorTip = ref('');
 const password = ref('');
+const passwordErrorTip = ref('');
+const password2 = ref('');
+const password2ErrorTip = ref('');
 const passwordVisible = ref(false);
-/**
- * TODO 校验账号密码
- * 1、区分登录还是注册
- * 2、登录时候只需要校验不为空
- * 3、注册时校验账号（2-15位数，禁止斜杠和空格）和密码（看接口的要求）是否符合要求
- * 4、失去焦点在输入框下面红字提示
- * 5、点击按钮时候也校验同时还给出ElMessage提示
- */
+
+const messageTip = ref<any>(null);
+
+// 校验用户名
+const checkUsername = () => {
+  let errorTip = '';
+  if (!username.value) {
+    errorTip = '请输入用户名！';
+  } else if (/\s+/.test(username.value)) {
+    errorTip = '用户名禁止携带空格！';
+  } else if (username.value.length < 2 || username.value.length > 15) {
+    errorTip = '用户名长度限制在2-15字符之间！';
+  } else if (/[\\/]+/.test(username.value)) {
+    errorTip = '用户名禁止携带斜杠！';
+  }
+  if (errorTip) {
+    usernameErrorTip.value = errorTip;
+    return false;
+  }
+  usernameErrorTip.value = '';
+  return true;
+};
+
+// 校验密码是否符合要求
+const checkPassword = () => {
+  let errorTip = '';
+  if (!password.value) {
+    errorTip = '请输入密码！';
+  } else if (/\s+/.test(password.value)) {
+    errorTip = '密码禁止携带空格！';
+  } else if (/[`‘“，。、；：？！【】《》（）\u4e00-\u9fa5]+/.test(password.value)) {
+    errorTip = '密码禁止含有中文或中文字符！';
+  } else if (password.value.length < 8 || password.value.length > 30) {
+    errorTip = '密码长度限制在8-30字符之间！';
+  } else if (/[\\/<>[](){}]/.test(password.value)) {
+    errorTip = '密码禁止携带斜杠或括号！';
+  } else if (!(/([a-zA-Z]+\d+)|(\d+[a-zA-Z]+)/.test(password.value))) {
+    errorTip = '密码强度太低，必需含有字母和数字！';
+  }
+  if (errorTip) {
+    passwordErrorTip.value = errorTip;
+    return false;
+  }
+  passwordErrorTip.value = '';
+  return true;
+};
+
+// 校验密码一致性
+const checkPasswordSame = () => {
+  if (!password2.value) {
+    password2ErrorTip.value = '请再次输入密码！';
+    return false;
+  }
+  password2ErrorTip.value = password.value === password2.value ? '' : '两次输入密码不一致！';
+  return password.value === password2.value;
+};
+
+const passwordChange = () => {
+  checkPassword();
+  if (props.type === 'login' || !password2.value) return;
+  checkPasswordSame();
+};
+
+const toLogin = () => {
+  checkUsername();
+  checkPassword();
+  const message = usernameErrorTip.value || passwordErrorTip.value;
+  if (message) {
+    messageTip.value?.close?.();
+    messageTip.value = ElMessage.error(message);
+    return;
+  }
+  emit('login', username.value, password.value);
+};
+
+const toRegister = () => {
+  checkUsername();
+  checkPassword();
+  checkPasswordSame();
+  const message = usernameErrorTip.value || passwordErrorTip.value || password2ErrorTip.value;
+  if (message) {
+    messageTip.value?.close?.();
+    messageTip.value = ElMessage.error(message);
+    return;
+  }
+  emit('register', username.value, password.value);
+};
+
+watch(() => props.type, () => {
+  usernameErrorTip.value = '';
+  passwordErrorTip.value = '';
+  password2ErrorTip.value = '';
+  passwordVisible.value = false;
+  messageTip.value?.close?.();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -57,6 +176,13 @@ const passwordVisible = ref(false);
       height: 1px;
       @include backgroundImage(right);
       content: '';
+    }
+    .error-tip {
+      position: absolute;
+      bottom: -20px;
+      left: 10px;
+      font-size: 14px;
+      color: red;
     }
   }
   input {
