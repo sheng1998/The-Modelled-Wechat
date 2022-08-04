@@ -10,11 +10,7 @@
     "eslint:recommended",
     "plugin:vue/vue3-recommended",
     "plugin:@typescript-eslint/recommended",
-    // 使用爱彼迎语法规范
-    "airbnb",
-    // ! 注意如果没有该文件会报错
-    // 因为项目中使用了自动导入的库，所以需要加载相应的eslint配置
-    "./.eslintrc-auto-import.json"
+    "airbnb"
   ],
   "parser": "vue-eslint-parser",
   "parserOptions": {
