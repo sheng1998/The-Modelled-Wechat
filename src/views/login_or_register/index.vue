@@ -5,12 +5,6 @@
         <div class="title">
           {{ type === 'login' ? '登录' : '注册' }}
         </div>
-        <div v-if="type === 'register'" class="avatar">
-          <img src="@/assets/img/avatar.png" alt="头像">
-          <div class="change-avatar flex">
-            更换头像
-          </div>
-        </div>
       </div>
       <InputForm :type="type"></InputForm>
       <div class="footer flex-center">
@@ -50,88 +44,14 @@ const changeType = (value: 'login' | 'register') => {
     background-color: #fff;
     border-radius: 16px;
     .header {
-      flex-direction: column;
       height: 32%;
       .title {
         font-weight: 900;
         font-size: 28px;
       }
-      .avatar {
-        position: relative;
-        width: 80px;
-        height: 80px;
-        margin-top: 20px;
-        border-radius: 50%;
-        background-color: $pink;
-        overflow: hidden;
-        cursor: pointer;
-        img {
-          width: 100%;
-          height: 100%;
-        }
-        .change-avatar {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          justify-content: center;
-          width: 100%;
-          height: 28px;
-          padding-top: 5px;
-          font-size: 12px;
-          background-color: rgba($color: $blue, $alpha: 0.3);
-        }
-      }
-    }
-    .form {
-      .input-wrap {
-        position: relative;
-        width: 100%;
-        + .input-wrap {
-          margin-top: 28px;
-        }
-        &::after {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 1px;
-          @include backgroundImage(right);
-          content: '';
-        }
-      }
-      input {
-        width: 100%;
-        border: none;
-        outline:none;
-        padding: 10px;
-      }
-      .password {
-        :deep(.el-icon) {
-          position: absolute;
-          right: 10px;
-          top:50%;
-          transform:translateY(-50%);
-          cursor: pointer;
-        }
-      }
-      button {
-        width: 100%;
-        height: 36px;
-        margin-top: 52px;
-        border-radius: 8px;
-        border: none;
-        outline:none;
-        letter-spacing: 6px;
-        font-size: 16px;
-        font-weight: 600;
-        color: #fff;
-        @include backgroundImage(right);
-        cursor: pointer;
-      }
     }
     .footer {
       margin-top: 24px;
-      .to-register,
       .change-type  {
         display: inline-block;
         padding-bottom: 1px;
@@ -147,11 +67,6 @@ const changeType = (value: 'login' | 'register') => {
         color: $blue;
         border-bottom-color: $blue;
       }
-    }
-  }
-  &.register {
-    .dialog .form {
-      margin-top: 20px;
     }
   }
 }
