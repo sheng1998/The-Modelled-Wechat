@@ -6,7 +6,7 @@
           {{ type === 'login' ? '登录' : '注册' }}
         </div>
       </div>
-      <InputForm :type="type"></InputForm>
+      <InputForm :key="type" :type="type"></InputForm>
       <div class="footer flex-center">
         <div v-if="type === 'login'">
           <span>没有账号？</span>
