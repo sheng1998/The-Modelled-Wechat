@@ -23,12 +23,16 @@
 
 <script setup lang='ts'>
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import InputForm from './form.vue';
 
-const type = ref<'login' | 'register'>('login');
+const route = useRoute();
+const router = useRouter();
+
+const type = ref<'login' | 'register'>(route.query.type === 'register' ? 'register' : 'login');
 const changeType = (value: 'login' | 'register') => {
-  // TODO 切换路由query
   type.value = value;
+  router.replace({ query: { type: value } });
 };
 </script>
 
