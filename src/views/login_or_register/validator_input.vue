@@ -87,6 +87,13 @@ const check = (key?: TTrigger) => {
     if (errorTip.value) break;
   }
 };
+
+// 设置错误信息
+const setErrorTip = (message: string) => {
+  errorTip.value = message;
+};
+
+defineExpose({ errorTip, check, setErrorTip });
 </script>
 
 <style lang="scss" scoped>
