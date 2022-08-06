@@ -79,9 +79,10 @@ const toggleShowPassword = () => {
 };
 
 // 参数校验
-const check = (key: TTrigger) => {
-  for (let i = 0; i < rules[key].length; i += 1) {
-    const rule = rules[key][i];
+const check = (key?: TTrigger) => {
+  const checkRules = key ? rules[key] : props.rules;
+  for (let i = 0; i < checkRules.length; i += 1) {
+    const rule = checkRules[i];
     errorTip.value = validator(rule, keyword.value) || '';
     if (errorTip.value) break;
   }
