@@ -1,25 +1,25 @@
 <template>
   <div class="form">
     <ValidatorInput
-      ref="usernameInputRef"
-      v-model="username"
+      ref="usernameRef"
+      v-model="username.value"
       placeholder="用户名"
-      :rules="usernameRules"
+      :rules="username.rules"
     />
     <ValidatorInput
-      ref="passwordInputRef"
-      v-model="password"
+      ref="passwordRef"
+      v-model="password.value"
       type="password"
       placeholder="密码"
-      :rules="passwordRules"
+      :rules="password.rules"
     />
     <ValidatorInput
       v-if="type === 'register'"
-      ref="password2InputRef"
-      v-model="password2"
+      ref="password2Ref"
+      v-model="password.value2"
       type="password"
       placeholder="再次输入密码"
-      :rules="password2Rules"
+      :rules="password.rules2"
     />
     <button v-if="type === 'login'" @click="submit('login')">
       登录
@@ -31,63 +31,20 @@
 </template>
 
 <script setup lang='ts'>
-import { PropType, ref } from 'vue';
+import { PropType, reactive, ref } from 'vue';
 import { ElMessage, MessageHandler } from 'element-plus';
-import { TRule } from '@/utils/validator';
 import ValidatorInput from './validator_input.vue';
-
-interface TTriggerRule extends TRule {
-  trigger: 'blur' | 'focus' | 'input' | 'change';
-}
+import handleUsername from './handle_username';
+import handlePassword from './handle_password';
 
 defineProps({ type: String as PropType<'login' | 'register'> });
 const emit = defineEmits(['login', 'register']);
 
-// 用户名输入框的ref对象
-const usernameInputRef = ref<any>(null);
-const username = ref('');
-// 用户名的校验规则
-const usernameRules: TTriggerRule[] = [
-  { required: true, message: '请输入用户名！', trigger: 'blur' },
-  {
-    regular: /\s+/, reverse: true, message: '用户名禁止携带空格！', trigger: 'blur',
-  },
-  {
-    min: 2, max: 15, message: '用户名长度限制在2-15字符之间！', trigger: 'blur',
-  },
-  {
-    regular: /[\\/]/, reverse: true, message: '用户名禁止携带斜杠！', trigger: 'blur',
-  },
-];
-
-// 密码输入框的ref对象
-const passwordInputRef = ref<any>(null);
-// 再次输入密码输入框的ref对象
-const password2InputRef = ref<any>(null);
-const password = ref('');
-// 密码校验规则
-const passwordRules: TTriggerRule[] = [
-  { required: true, message: '请输入密码！', trigger: 'blur' },
-  {
-    regular: /\s+/, reverse: true, message: '密码禁止携带空格！', trigger: 'blur',
-  },
-  {
-    regular: /[‘’“”，。、；：？！【】《》（）\u4e00-\u9fa0]/, reverse: true, message: '密码禁止携带中文或中文字符！', trigger: 'blur',
-  },
-  {
-    min: 8, max: 30, message: '密码长度限制在8-30字符之间！', trigger: 'blur',
-  },
-  {
-    regular: /[\\/]/, reverse: true, message: '密码禁止携带斜杠！', trigger: 'blur',
-  },
-  { regular: /([a-z].?\d)|(\d.?[a-z])/i, message: '密码必需含有字母和数字！', trigger: 'blur' },
-];
-const password2 = ref('');
-// 再次输入密码的校验规则
-const password2Rules: TTriggerRule[] = [
-  { required: true, message: '请再次输入密码！', trigger: 'blur' },
-  { method: (value) => value === password.value, message: '两次输入密码不一致！', trigger: 'blur' },
-];
+const usernameRef = ref<any>(null);
+const passwordRef = ref<any>(null);
+const password2Ref = ref<any>(null);
+const username = reactive(handleUsername());
+const password = reactive(handlePassword());
 
 // 用来记录ElMessage对象的（关闭的时候需要）
 const messageTip = ref<MessageHandler | null>(null);
@@ -95,14 +52,14 @@ const messageTip = ref<MessageHandler | null>(null);
 // 表单提交
 const submit = (key: 'login' | 'register') => {
   // 校验用户名
-  usernameInputRef.value?.check();
+  usernameRef.value?.check();
   // 校验密码
-  passwordInputRef.value?.check();
-  let errorTip = usernameInputRef.value?.errorTip || passwordInputRef.value?.errorTip;
+  passwordRef.value?.check();
+  let errorTip = usernameRef.value?.errorTip || passwordRef.value?.errorTip;
   // 注册时候还需要校验密码2
   if (key === 'register') {
-    password2InputRef.value?.check();
-    errorTip = errorTip || password2InputRef.value?.errorTip;
+    password2Ref.value?.check();
+    errorTip = errorTip || password2Ref.value?.errorTip;
   }
   if (errorTip) {
     messageTip.value?.close?.();
@@ -114,7 +71,7 @@ const submit = (key: 'login' | 'register') => {
 
 // 设置错误信息
 const setErrorTip = (key: 'username' | 'password', message: string) => {
-  const input = key === 'password' ? passwordInputRef.value : usernameInputRef.value;
+  const input = key === 'password' ? passwordRef.value : usernameRef.value;
   input?.setErrorTip?.(message);
 };
 
