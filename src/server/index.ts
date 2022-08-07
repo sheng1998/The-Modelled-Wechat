@@ -28,7 +28,6 @@ request.interceptors.response.use((response) => {
   }
   return response;
 }, (error) => {
-  console.log(error);
   // 超出 2xx 范围的状态码都会触发该函数。
   switch (error.response.status) {
     case 500:
