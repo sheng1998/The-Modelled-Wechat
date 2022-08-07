@@ -6,6 +6,7 @@
       placeholder="用户名"
       :rules="username.rules"
       auto-focus
+      @keyup-enter="submit"
     />
     <ValidatorInput
       ref="passwordRef"
@@ -13,6 +14,7 @@
       type="password"
       placeholder="密码"
       :rules="password.rules"
+      @keyup-enter="submit"
     />
     <ValidatorInput
       v-if="type === 'register'"
@@ -21,12 +23,10 @@
       type="password"
       placeholder="再次输入密码"
       :rules="password.rules2"
+      @keyup-enter="submit"
     />
-    <button v-if="type === 'login'" @click="submit('login')">
-      登录
-    </button>
-    <button v-else @click="submit('register')">
-      注册
+    <button @click="submit">
+      {{ type === 'register' ? '注册' : '登录' }}
     </button>
   </div>
 </template>
@@ -38,7 +38,12 @@ import ValidatorInput from './validator_input.vue';
 import handleUsername from './handle_username';
 import handlePassword from './handle_password';
 
-defineProps({ type: String as PropType<'login' | 'register'> });
+const props = defineProps({
+  type: {
+    type: String as PropType<'login' | 'register'>,
+    default: 'login',
+  },
+});
 const emit = defineEmits(['login', 'register']);
 
 const usernameRef = ref<any>(null);
@@ -51,7 +56,8 @@ const password = reactive(handlePassword());
 const messageTip = ref<MessageHandler | null>(null);
 
 // 表单提交
-const submit = (key: 'login' | 'register') => {
+const submit = () => {
+  const key = props.type;
   // 校验用户名
   usernameRef.value?.check();
   // 校验密码

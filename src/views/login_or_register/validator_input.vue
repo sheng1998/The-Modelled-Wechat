@@ -9,6 +9,7 @@
       @change="check('change')"
       @focus="check('focus')"
       @input="check('input')"
+      @keyup.enter="$emit('keyup-enter')"
     >
     <div v-if="errorTip" class="error-tip">
       {{ errorTip }}
@@ -54,7 +55,7 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(['blur', 'change', 'focus', 'input', 'update:modelValue']);
+const emits = defineEmits(['blur', 'change', 'focus', 'input', 'update:modelValue', 'keyup-enter']);
 
 const keyword = computed({
   get: () => props.modelValue,
