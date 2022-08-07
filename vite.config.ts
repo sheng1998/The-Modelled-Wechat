@@ -59,6 +59,12 @@ export default defineConfig({
     // 将 host 设置为 0.0.0.0 支持通过 ip 访问启动的项目
     host: '0.0.0.0',
     port: 8888,
+    proxy: {
+      '/api/v1': {
+        target: 'http://127.0.0.1:7002/',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     minify: 'terser',

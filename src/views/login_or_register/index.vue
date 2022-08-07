@@ -6,7 +6,13 @@
           {{ type === 'login' ? '登录' : '注册' }}
         </div>
       </div>
-      <InputForm :key="type" :type="type"></InputForm>
+      <InputForm
+        ref="inputFromRef"
+        :key="type"
+        :type="type"
+        @login="login"
+        @register="register"
+      ></InputForm>
       <div class="footer flex-center">
         <div v-if="type === 'login'">
           <span>没有账号？</span>
@@ -24,9 +30,12 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 import mergeQuery from '@/utils/merge_query';
+import request from '@/server';
 import InputForm from './form.vue';
 
+const inputFromRef = ref<any>(null);
 const route = useRoute();
 const router = useRouter();
 
@@ -34,6 +43,37 @@ const type = ref<'login' | 'register'>(route.query.type === 'register' ? 'regist
 const changeType = (value: 'login' | 'register') => {
   type.value = value;
   router.replace({ query: mergeQuery(route.query, { type: value }) });
+};
+
+const login = (username: string, password: string) => {
+  request.post('/login', { username, password }).then(() => {
+    ElMessage.success('登陆成功！');
+    // TODO 跳转至首页
+  }, (error) => {
+    handleResponseError(error);
+  });
+};
+
+const register = (username: string, password: string) => {
+  request.post('/register', { username, password }).then(() => {
+    ElMessage.success('注册成功，将自动登录并跳转首页！');
+    // TODO 跳转至首页
+  }, (error) => {
+    handleResponseError(error);
+  });
+};
+
+const handleResponseError = (error?: { code: number; message: string}) => {
+  if (!error) return;
+  const { code, message } = error;
+  switch (code) {
+    case 1:
+      inputFromRef.value.vlue?.setErrorTip('username', message);
+      break;
+    case 2:
+      inputFromRef.value.vlue?.setErrorTip('password', message);
+      break;
+  }
 };
 </script>
 

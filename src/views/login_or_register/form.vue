@@ -111,6 +111,14 @@ const submit = (key: 'login' | 'register') => {
   }
   emit(key, username.value, password.value);
 };
+
+// 设置错误信息
+const setErrorTip = (key: 'username' | 'password', message: string) => {
+  const input = key === 'password' ? passwordInputRef.value : usernameInputRef.value;
+  input?.setErrorTip?.(message);
+};
+
+defineExpose({ setErrorTip });
 </script>
 
 <style lang="scss" scoped>
