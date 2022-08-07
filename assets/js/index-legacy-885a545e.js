@@ -1,0 +1,1 @@
+System.register(["./index-legacy-555d4ad3.js"],(function(e){"use strict";var t;return{setters:[function(e){t=e._}],execute:function(){e("default",t({},[["render",function(e,t){return" 这是首页 "}]]))}}}));
