@@ -49,8 +49,8 @@ const emit = defineEmits(['login', 'register']);
 const usernameRef = ref<any>(null);
 const passwordRef = ref<any>(null);
 const password2Ref = ref<any>(null);
-const username = reactive(handleUsername());
-const password = reactive(handlePassword());
+const username = reactive(handleUsername(props.type));
+const password = reactive(handlePassword(props.type));
 
 // 用来记录ElMessage对象的（关闭的时候需要）
 const messageTip = ref<MessageHandler | null>(null);
