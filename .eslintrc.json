@@ -56,6 +56,10 @@
     "import/extensions": "off",
     "import/prefer-default-export": "off",
     "vue/multi-word-component-names": "off",
-    "no-continue": "off"
+    "no-continue": "off",
+    "no-use-before-define": "off",
+    "default-case": "off",
+    "vue/require-default-prop": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }
