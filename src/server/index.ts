@@ -3,7 +3,7 @@ import { ElMessage } from 'element-plus';
 
 const request = axios.create({
   // TODO 区分开发环境和生产环境
-  baseURL: '/api/v1',
+  baseURL: import.meta.env.MODE === 'development' ? '/api/v1' : 'http://119.91.74.150:7002/',
   xsrfCookieName: 'csrfToken',
   xsrfHeaderName: 'x-csrf-token',
 });
