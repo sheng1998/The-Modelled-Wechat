@@ -5,6 +5,7 @@
       v-model="username.value"
       placeholder="用户名"
       :rules="username.rules"
+      auto-focus
     />
     <ValidatorInput
       ref="passwordRef"

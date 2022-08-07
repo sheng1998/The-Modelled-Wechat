@@ -1,6 +1,7 @@
 <template>
   <div class="validator-input" :class="{ error: errorTip, password: type === 'password' }">
     <input
+      ref="inputRef"
       v-model="keyword"
       :type="inputType"
       :placeholder="placeholder"
@@ -20,17 +21,21 @@
 </template>
 
 <script setup lang='ts'>
-import { computed, PropType, ref } from 'vue';
+import {
+  computed, onMounted, PropType, ref,
+} from 'vue';
 import { ElIcon } from 'element-plus';
 import { View, Hide } from '@element-plus/icons-vue';
-import validator, { TRule } from '@/utils/validator';
+import validator from '@/utils/validator';
+import { TTrigger, TTriggerRule } from './type';
 
-type TTrigger = 'blur' | 'focus' | 'input' | 'change';
-interface TTriggerRule extends TRule {
-  trigger: TTrigger;
-}
+const inputRef = ref<any>(null);
 
 const props = defineProps({
+  autoFocus: {
+    type: Boolean,
+    default: false,
+  },
   modelValue: {
     type: String,
     default: '',
@@ -88,12 +93,24 @@ const check = (key?: TTrigger) => {
   }
 };
 
+const focus = () => {
+  inputRef.value?.focus?.();
+};
+
 // 设置错误信息
 const setErrorTip = (message: string) => {
   errorTip.value = message;
 };
 
-defineExpose({ errorTip, check, setErrorTip });
+defineExpose({
+  errorTip, check, setErrorTip, focus,
+});
+
+onMounted(() => {
+  if (props.autoFocus) {
+    focus();
+  }
+});
 </script>
 
 <style lang="scss" scoped>

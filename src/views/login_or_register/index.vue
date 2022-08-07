@@ -16,11 +16,19 @@
       <div class="footer flex-center">
         <div v-if="type === 'login'">
           <span>没有账号？</span>
-          <span class="change-type to-register" @click="changeType('register')">去注册</span>
+          <span
+            class="change-type to-register"
+            @click="changeType('register')"
+            @mousedown="mousedown"
+          >去注册</span>
         </div>
         <div v-else>
           <span>已有账号。</span>
-          <span class="change-type to-login" @click="changeType('login')">去登录</span>
+          <span
+            class="change-type to-login"
+            @click="changeType('login')"
+            @mousedown="mousedown"
+          >去登录</span>
         </div>
       </div>
     </div>
@@ -40,6 +48,13 @@ const route = useRoute();
 const router = useRouter();
 
 const type = ref<'login' | 'register'>(route.query.type === 'register' ? 'register' : 'login');
+
+// 阻止点击去注册\去登录时的默认行为，防止输入框失焦
+const mousedown = (e: Event) => {
+  e.preventDefault();
+  return false;
+};
+
 const changeType = (value: 'login' | 'register') => {
   type.value = value;
   router.replace({ query: mergeQuery(route.query, { type: value }) });
