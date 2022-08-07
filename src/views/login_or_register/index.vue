@@ -48,7 +48,7 @@ const changeType = (value: 'login' | 'register') => {
 const login = (username: string, password: string) => {
   request.post('/login', { username, password }).then(() => {
     ElMessage.success('登陆成功！');
-    // TODO 跳转至首页
+    router.replace({ name: 'Home' });
   }, (error) => {
     handleResponseError(error);
   });
@@ -57,7 +57,7 @@ const login = (username: string, password: string) => {
 const register = (username: string, password: string) => {
   request.post('/register', { username, password }).then(() => {
     ElMessage.success('注册成功，将自动登录并跳转首页！');
-    // TODO 跳转至首页
+    router.replace({ name: 'Home' });
   }, (error) => {
     handleResponseError(error);
   });
@@ -68,10 +68,10 @@ const handleResponseError = (error?: { code: number; message: string}) => {
   const { code, message } = error;
   switch (code) {
     case 1:
-      inputFromRef.value.vlue?.setErrorTip('username', message);
+      inputFromRef.value?.setErrorTip('username', message);
       break;
     case 2:
-      inputFromRef.value.vlue?.setErrorTip('password', message);
+      inputFromRef.value?.setErrorTip('password', message);
       break;
   }
 };

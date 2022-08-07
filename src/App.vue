@@ -1,10 +1,6 @@
 <template>
-  <LoginOrRegister></LoginOrRegister>
+  <router-view></router-view>
 </template>
-
-<script setup lang='ts'>
-import LoginOrRegister from '@/views/login_or_register/index.vue';
-</script>
 
 <style lang="scss">
 #app {
