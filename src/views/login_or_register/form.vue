@@ -107,8 +107,9 @@ const submit = (key: 'login' | 'register') => {
   if (errorTip) {
     messageTip.value?.close?.();
     messageTip.value = ElMessage.error(errorTip);
+    return;
   }
-  emit('login', username.value, password.value, key === 'register' ? password2.value : undefined);
+  emit(key, username.value, password.value);
 };
 </script>
 
