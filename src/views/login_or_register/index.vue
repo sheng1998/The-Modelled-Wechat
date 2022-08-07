@@ -24,6 +24,7 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import mergeQuery from '@/utils/merge_query';
 import InputForm from './form.vue';
 
 const route = useRoute();
@@ -32,7 +33,7 @@ const router = useRouter();
 const type = ref<'login' | 'register'>(route.query.type === 'register' ? 'register' : 'login');
 const changeType = (value: 'login' | 'register') => {
   type.value = value;
-  router.replace({ query: { type: value } });
+  router.replace({ query: mergeQuery(route.query, { type: value }) });
 };
 </script>
 
