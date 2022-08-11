@@ -19,7 +19,7 @@ const request = axios.create({
 // 响应拦截器
 request.interceptors.response.use((response) => {
   // 2xx 范围内的状态码都会触发该函数。
-  if (response.data.code !== 0) {
+  if (response.data.code !== undefined && response.data.code !== 0) {
     ElMessage.error({
       message: response.data.message,
       grouping: true,

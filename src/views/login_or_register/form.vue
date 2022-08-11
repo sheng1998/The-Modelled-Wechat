@@ -73,7 +73,7 @@ const submit = () => {
     messageTip.value = ElMessage.error(errorTip);
     return;
   }
-  emit(key, username.value, password.value);
+  emit(key, username.value, password.encrypt(password.value));
 };
 
 // 设置错误信息

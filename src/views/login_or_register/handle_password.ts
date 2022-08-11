@@ -1,4 +1,5 @@
 import { computed, ref } from 'vue';
+import JSEncrypt from 'jsencrypt';
 import { TTriggerRule } from './type';
 
 export default function (type: 'login' | 'register') {
@@ -33,7 +34,20 @@ export default function (type: 'login' | 'register') {
     { method: (data) => data === value.value, message: '两次输入密码不一致！', trigger: 'blur' },
   ];
 
+  // 使用公钥加密数据
+  const encrypt = (data: string): string => {
+    const publicKey = '-----BEGIN PUBLIC KEY-----\n'
+    + 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDN4PbNvbScu1F0ZO63fbKWg7P5\n'
+    + 'mjE9LhfQdG4He8t2P5LIocGgsYk9z+Q94++C+b86KrYirRMEq0vANgS3nCHH7M9R\n'
+    + 'dZHQ0e7Kyvp/eEKos7/thf4nTm52lg3ERT/tecyIPTrR1BJ0BEyd8i3i4WR/Ep7S\n'
+    + 'RknuZknUHCP1EjIqsQIDAQAB\n'
+    + '-----END PUBLIC KEY-----';
+    const jsEncrypt = new JSEncrypt();
+    jsEncrypt.setPublicKey(publicKey);
+    return jsEncrypt.encrypt(data) as string;
+  };
+
   return {
-    value, value2, rules, rules2,
+    value, value2, rules, rules2, encrypt,
   };
 }
