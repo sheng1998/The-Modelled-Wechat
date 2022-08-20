@@ -61,7 +61,7 @@ const changeType = (value: 'login' | 'register') => {
 };
 
 const login = (username: string, password: string) => {
-  request.post('/login', { username, password }).then(() => {
+  request.post('/user/login', { username, password }).then(() => {
     ElMessage.success('登陆成功！');
     router.replace({ name: 'Home' });
   }, (error) => {
@@ -70,7 +70,7 @@ const login = (username: string, password: string) => {
 };
 
 const register = (username: string, password: string) => {
-  request.post('/register', { username, password }).then(() => {
+  request.post('/user/register', { username, password }).then(() => {
     ElMessage.success('注册成功，将自动登录并跳转首页！');
     router.replace({ name: 'Home' });
   }, (error) => {
