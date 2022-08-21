@@ -2,9 +2,8 @@ import axios from 'axios';
 import { ElMessage } from 'element-plus';
 
 const request = axios.create({
+  withCredentials: true,
   baseURL: import.meta.env.MODE === 'development' ? '/api/v1' : 'http://119.91.74.150:3002/api/v1',
-  xsrfCookieName: 'csrfToken',
-  xsrfHeaderName: 'x-csrf-token',
 });
 
 // 请求拦截器
