@@ -15,8 +15,8 @@
       {{ errorTip }}
     </div>
     <el-icon v-if="type === 'password'" @click="toggleShowPassword">
-      <Hide v-if="passwordVisible" />
-      <View v-else />
+      <View v-if="passwordVisible" />
+      <Hide v-else />
     </el-icon>
   </div>
 </template>
