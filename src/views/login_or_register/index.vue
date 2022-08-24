@@ -78,17 +78,9 @@ const register = (username: string, password: string) => {
   });
 };
 
-const handleResponseError = (error?: { code: number; message: string}) => {
-  if (!error) return;
-  const { code, message } = error;
-  switch (code) {
-    case 1:
-      inputFromRef.value?.setErrorTip('username', message);
-      break;
-    case 2:
-      inputFromRef.value?.setErrorTip('password', message);
-      break;
-  }
+const handleResponseError = (error?: { data: { type: 'username' | 'password' }, message: string}) => {
+  if (!error || !error.data?.type) return;
+  inputFromRef.value?.setErrorTip(error.data.type, error.message);
 };
 </script>
 
