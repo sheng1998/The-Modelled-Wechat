@@ -5,6 +5,7 @@
       v-model="keyword"
       :type="inputType"
       :placeholder="placeholder"
+      :maxlength="maxlength"
       @blur="check('blur')"
       @change="check('change')"
       @focus="check('focus')"
@@ -33,6 +34,10 @@ import { TTrigger, TTriggerRule } from './type';
 const inputRef = ref<any>(null);
 
 const props = defineProps({
+  maxlength: {
+    type: Number,
+    default: Infinity,
+  },
   autoFocus: {
     type: Boolean,
     default: false,

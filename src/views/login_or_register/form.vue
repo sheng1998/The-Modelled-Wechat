@@ -4,6 +4,7 @@
       ref="usernameRef"
       v-model="username.value"
       placeholder="用户名"
+      :maxlength="15"
       :rules="username.rules"
       auto-focus
       @keyup-enter="submit"
@@ -13,6 +14,7 @@
       v-model="password.value"
       type="password"
       placeholder="密码"
+      :maxlength="30"
       :rules="password.rules"
       @keyup-enter="submit"
     />
