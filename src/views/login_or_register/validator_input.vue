@@ -86,12 +86,14 @@ const toggleShowPassword = () => {
 
 // 参数校验
 const check = (key?: TTrigger) => {
+  let isError = '';
   const checkRules = key ? rules[key] : props.rules;
   for (let i = 0; i < checkRules.length; i += 1) {
     const rule = checkRules[i];
-    errorTip.value = validator(rule, keyword.value) || '';
-    if (errorTip.value) break;
+    isError = validator(rule, keyword.value) || '';
+    if (isError) break;
   }
+  errorTip.value = isError;
 };
 
 const focus = () => {
