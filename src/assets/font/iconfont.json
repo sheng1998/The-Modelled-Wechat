@@ -1,0 +1,30 @@
+{
+  "id": "3609170",
+  "name": "wechat",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "25885547",
+      "name": "机器人、智能-04",
+      "font_class": "robot2",
+      "unicode": "e898",
+      "unicode_decimal": 59544
+    },
+    {
+      "icon_id": "15799251",
+      "name": "文件",
+      "font_class": "assistant",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "18368435",
+      "name": "机器人",
+      "font_class": "robot",
+      "unicode": "e68c",
+      "unicode_decimal": 59020
+    }
+  ]
+}
