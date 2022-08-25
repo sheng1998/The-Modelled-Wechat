@@ -35,3 +35,8 @@ npm run build
 ```shell
 npm run lint:fix
 ```
+
+## 线上预览地址
+
+[github-page](https://sheng1998.github.io/The-Modelled-Wechat/)
+[临时IP](http://119.91.74.150:3000/#/)
