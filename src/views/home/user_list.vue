@@ -1,8 +1,8 @@
 <template>
   <div class="user-list">
-    <SearchBar :user-list="userList"></SearchBar>
+    <SearchBar :user-list="userList" @select="$emit('select', $event)"></SearchBar>
     <ElScrollbar>
-      <div class="user assistant flex">
+      <div class="user assistant flex" @click="selectAssistant">
         <div class="avatar flex-center">
           <span class="iconfont icon-assistant"></span>
         </div>
@@ -20,7 +20,12 @@
           </div>
         </div>
       </div>
-      <div v-for="item in 2" :key="item" class="user robot flex">
+      <div
+        v-for="item in 2"
+        :key="item"
+        class="user robot flex"
+        @click="selectRobot(item.toString())"
+      >
         <div class="avatar flex-center">
           <span v-if="item === 1" class="iconfont icon-robot"></span>
           <span v-else class="iconfont icon-robot2"></span>
@@ -39,7 +44,12 @@
           </div>
         </div>
       </div>
-      <div v-for="user in userList" :key="user.id" class="user flex">
+      <div
+        v-for="user in userList"
+        :key="user.id"
+        class="user flex"
+        @click="$emit('select', user)"
+      >
         <div class="avatar flex-center">
           <img src="/avatar/avatar_01.png" :alt="user.username">
         </div>
@@ -66,6 +76,8 @@ import { ElScrollbar } from 'element-plus';
 import { ref } from 'vue';
 import SearchBar from './search_bar.vue';
 import { UserList } from '@/typings/user';
+
+const emits = defineEmits(['select']);
 
 const userList = ref<UserList>([{
   username: '李白',
@@ -95,6 +107,20 @@ const userList = ref<UserList>([{
   username: '貂蝉',
   id: 'diaochan',
 }]);
+
+const selectAssistant = () => {
+  emits('select', {
+    username: '文件传输助手',
+    id: 'wenjianchuanshuzhushou',
+  });
+};
+
+const selectRobot = (id: string) => {
+  emits('select', {
+    username: `机器人${id}`,
+    id: `jiqiren${id}`,
+  });
+};
 </script>
 
 <style lang="scss" scoped>

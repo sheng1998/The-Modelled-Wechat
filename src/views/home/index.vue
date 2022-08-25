@@ -2,18 +2,22 @@
   <div class="home flex-center">
     <div class="wrap flex">
       <SideBar></SideBar>
-      <UserList></UserList>
-      <ChatModel :class="{ 'right-border': notice }"></ChatModel>
+      <UserList @select="currentUser = $event"></UserList>
+      <ChatModel :class="{ 'right-border': notice }" :user="currentUser"></ChatModel>
       <NoticeBoard v-if="notice" class="notice-board"></NoticeBoard>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import SideBar from '@/views/layout/sidebar.vue';
 import UserList from './user_list.vue';
 import ChatModel from './chat_model.vue';
 import NoticeBoard from './notice_board.vue';
+import { User } from '@/typings/user';
+
+const currentUser = ref<User | undefined>(undefined);
 
 // TODO 用于记录公告信息
 const notice = null;
