@@ -1,5 +1,6 @@
 <template>
   <div class="user-list">
+    <SearchBar :user-list="userList"></SearchBar>
     <ElScrollbar>
       <div class="user assistant flex">
         <div class="avatar flex-center">
@@ -38,21 +39,21 @@
           </div>
         </div>
       </div>
-      <div v-for="item in 20" :key="item" class="user flex">
+      <div v-for="user in userList" :key="user.id" class="user flex">
         <div class="avatar flex-center">
-          <img :src="'/avatar/avatar_0'+ (item % 2 + 1) +'.png'" alt="用户名">
+          <img src="/avatar/avatar_01.png" :alt="user.username">
         </div>
         <div class="info">
           <div class="top flex">
             <div class="name ellipsis">
-              {{ 'username' + item }}
+              {{ user.username }}
             </div>
             <div class="time">
               {{ '时间' }}
             </div>
           </div>
           <div class="message ellipsis">
-            {{ 'message' + item }}
+            {{ user.id }}
           </div>
         </div>
       </div>
@@ -62,6 +63,38 @@
 
 <script lang="ts" setup>
 import { ElScrollbar } from 'element-plus';
+import { ref } from 'vue';
+import SearchBar from './search_bar.vue';
+import { UserList } from '@/typings/user';
+
+const userList = ref<UserList>([{
+  username: '李白',
+  id: 'libai',
+}, {
+  username: '韩信',
+  id: 'hanxin',
+}, {
+  username: '周瑜',
+  id: 'zhouyu',
+}, {
+  username: '安琪拉',
+  id: 'anqila',
+}, {
+  username: '李元芳',
+  id: 'liyuanfang',
+}, {
+  username: '妲己',
+  id: 'daji',
+}, {
+  username: '程咬金',
+  id: 'chengyaojin',
+}, {
+  username: '项羽',
+  id: 'xiangyu',
+}, {
+  username: '貂蝉',
+  id: 'diaochan',
+}]);
 </script>
 
 <style lang="scss" scoped>
@@ -70,6 +103,9 @@ import { ElScrollbar } from 'element-plus';
   width: $user-list-width;
   height: 100%;
   background-color: #dfdede;
+  & > .el-scrollbar {
+    height: calc(100% - #{$search-bar-height});
+  }
   .user {
     width: 100%;
     height: 60px;
