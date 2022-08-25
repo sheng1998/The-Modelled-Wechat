@@ -3,8 +3,9 @@
 </template>
 
 <style lang="scss" scoped>
+@import '$style/variable';
 .notice-board {
-  width: 250px;
+  width: $notice-boar-width;
   height: 100%;
   background-color: #fff;
 }

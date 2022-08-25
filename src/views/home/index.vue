@@ -20,17 +20,18 @@ const notice = null;
 </script>
 
 <style lang="scss" scoped>
+@import '$style/variable';
 .home {
   width: 100%;
-  min-width: 1300px;
+  min-width: $min-width;
   height: 100%;
-  min-height: 700px;
+  min-height: $min-height;
   .wrap {
-    height: 600px;
-    border: 1px solid #d9d9d9;
+    height: $wrap-height;
+    border: 1px solid $border-color;
   }
   .chat-model.right-border {
-    border-right: 1px solid #d9d9d9;
+    border-right: 1px solid $border-color;
   }
   .side-bar,
   .user-list,

@@ -3,8 +3,9 @@
 </template>
 
 <style lang="scss" scoped>
+@import '$style/variable';
 .chat-model {
-  width: 600px;
+  width: $chat-model-width;
   height: 100%;
   background-color: #fff;
 }

@@ -65,15 +65,16 @@ import { ElScrollbar } from 'element-plus';
 </script>
 
 <style lang="scss" scoped>
+@import '$style/variable';
 .user-list {
-  width: 250px;
+  width: $user-list-width;
   height: 100%;
   background-color: #dfdede;
   .user {
     width: 100%;
     height: 60px;
     padding: 10px;
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom: 1px solid $border-color;
     cursor: pointer;
     .avatar {
       flex-shrink: 0;
