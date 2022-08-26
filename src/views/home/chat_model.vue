@@ -49,7 +49,7 @@ const send = () => {
     });
     return;
   }
-  emits('send', message.value.trim(), props.user?.id || '');
+  emits('send', message.value.trim(), props.user?.id || '', 'text');
 };
 const clearMessage = () => {
   message.value = '';

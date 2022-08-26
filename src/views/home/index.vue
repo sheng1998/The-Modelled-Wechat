@@ -20,8 +20,10 @@ import SideBar from '@/views/layout/sidebar.vue';
 import UserList from './user_list.vue';
 import ChatModel from './chat_model.vue';
 import NoticeBoard from './notice_board.vue';
+import socket from '@/utils/socket';
 import request from '@/server';
 import { User, UserList as TUserList } from '@/typings/user';
+import { SocketType } from '@/typings/socket';
 
 const currentUser = ref<User | undefined>(undefined);
 const userList = ref<TUserList>([]);
@@ -36,9 +38,10 @@ const getUserList = async () => {
 getUserList();
 
 // 发送消息
-const send = (message: string, uid: string) => {
+const send = (message: string, uid: string, type: SocketType = 'text') => {
   console.log(message, uid);
   chatModelRef.value?.clearMessage();
+  socket.emit('message', { uid, message, type });
 };
 
 // TODO 用于记录公告信息
