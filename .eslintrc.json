@@ -60,6 +60,7 @@
     "no-use-before-define": "off",
     "default-case": "off",
     "vue/require-default-prop": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-restricted-syntax": "off"
   }
 }

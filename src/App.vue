@@ -4,19 +4,16 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import request from './server';
+import { useUserStore } from '@/store/user';
 
 const route = useRoute();
 const router = useRouter();
+// 用户的状态信息
+const userStore = useUserStore();
 
-// 非登录页面要检查登录状态（重定向登录页）
+// 非登录页面要检查登录状态
 if (route.name !== 'Login') {
-  // 校验登录状态
-  request.get('/user/check').catch((error) => {
-    if (error?.code === 1) {
-      router.replace({ name: 'Login' });
-    }
-  });
+  userStore.checkLogin(router);
 }
 </script>
 

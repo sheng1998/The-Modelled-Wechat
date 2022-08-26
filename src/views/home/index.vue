@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import SideBar from '@/views/layout/sidebar.vue';
 import UserList from './user_list.vue';
 import ChatModel from './chat_model.vue';
@@ -24,6 +24,10 @@ import socket from '@/utils/socket';
 import request from '@/server';
 import { User, UserList as TUserList } from '@/typings/user';
 import { SocketType } from '@/typings/socket';
+import { useUserStore } from '@/store/user';
+
+// 用户的状态信息
+const userStore = useUserStore();
 
 const currentUser = ref<User | undefined>(undefined);
 const userList = ref<TUserList>([]);
@@ -31,11 +35,15 @@ const chatModelRef = ref<InstanceType<typeof ChatModel> | null>(null);
 
 // 获取用户列表
 const getUserList = async () => {
+  if (!userStore.id) return;
   const { data } = await request.get('/user/list');
   userList.value = data.data;
 };
 
-getUserList();
+// 监听用户id的变化获取用户列表
+watch(() => userStore.id, getUserList, {
+  immediate: true,
+});
 
 // 发送消息
 const send = (message: string, uid: string, type: SocketType = 'text') => {

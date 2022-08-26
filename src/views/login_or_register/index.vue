@@ -42,10 +42,13 @@ import { ElMessage } from 'element-plus';
 import mergeQuery from '@/utils/merge_query';
 import request from '@/server';
 import InputForm from './form.vue';
+import { useUserStore } from '@/store/user';
 
 const inputFromRef = ref<any>(null);
 const route = useRoute();
 const router = useRouter();
+// 用户的状态信息
+const userStore = useUserStore();
 
 const type = ref<'login' | 'register'>(route.query.type === 'register' ? 'register' : 'login');
 
@@ -61,7 +64,8 @@ const changeType = (value: 'login' | 'register') => {
 };
 
 const login = (username: string, password: string) => {
-  request.post('/user/login', { username, password }).then(() => {
+  request.post('/user/login', { username, password }).then((res) => {
+    userStore.setUserInfo(res.data.data);
     ElMessage.success('登陆成功！');
     router.replace({ name: 'Home' });
   }, (error) => {
@@ -70,7 +74,8 @@ const login = (username: string, password: string) => {
 };
 
 const register = (username: string, password: string) => {
-  request.post('/user/register', { username, password }).then(() => {
+  request.post('/user/register', { username, password }).then((res) => {
+    userStore.setUserInfo(res.data.data);
     ElMessage.success('注册成功，将自动登录并跳转首页！');
     router.replace({ name: 'Home' });
   }, (error) => {
