@@ -5,21 +5,58 @@
         {{ user.username }}
       </div>
       <ElScrollbar></ElScrollbar>
-      <div class="footer"></div>
+      <div class="footer">
+        <ElScrollbar>
+          <el-input
+            v-model="message"
+            autosize
+            resize="none"
+            autofocus
+            type="textarea"
+            @keyup.ctrl.enter="send"
+          />
+        </ElScrollbar>
+        <ElButton type="success" bg text @click="send">
+          发送
+        </ElButton>
+      </div>
     </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { ElScrollbar } from 'element-plus';
+import { PropType, ref } from 'vue';
+import {
+  ElScrollbar, ElInput, ElButton, ElMessage,
+} from 'element-plus';
 import { User } from '@/typings/user';
 
-defineProps({
+const props = defineProps({
   user: {
     type: Object as PropType<User>,
   },
 });
+
+const emits = defineEmits(['send']);
+
+const message = ref('');
+
+const send = () => {
+  if (!message.value.trim()) {
+    ElMessage.warning({
+      message: '禁止发送空内容!',
+      grouping: true,
+    });
+    return;
+  }
+  emits('send', message.value.trim(), props.user?.id || '');
+};
+
+const clearMessage = () => {
+  message.value = '';
+};
+
+defineExpose({ clearMessage });
 </script>
 
 <style lang="scss" scoped>
@@ -42,6 +79,26 @@ $footer-height: 150px;
   .footer {
     height: $footer-height;
     border-top: 1px solid $border-color;
+    & > .el-scrollbar {
+      height: 110px;
+    }
+    .el-textarea {
+      height: 110px;
+      outline: none;
+      border: none;
+      :deep(.el-textarea__inner) {
+        border: none;
+        box-shadow: none;
+        outline: none;
+      }
+    }
+    .el-button {
+      float: right;
+      width: 100px;
+      margin-right: 10px;
+      color: #07c160;
+      background-color: #e9e9e9 !important;
+    }
   }
 }
 </style>

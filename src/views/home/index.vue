@@ -3,7 +3,12 @@
     <div class="wrap flex">
       <SideBar></SideBar>
       <UserList :user-list="userList" @select="currentUser = $event"></UserList>
-      <ChatModel :class="{ 'right-border': notice }" :user="currentUser"></ChatModel>
+      <ChatModel
+        ref="chatModelRef"
+        :class="{ 'right-border': notice }"
+        :user="currentUser"
+        @send="send"
+      ></ChatModel>
       <NoticeBoard v-if="notice" class="notice-board"></NoticeBoard>
     </div>
   </div>
@@ -20,13 +25,21 @@ import { User, UserList as TUserList } from '@/typings/user';
 
 const currentUser = ref<User | undefined>(undefined);
 const userList = ref<TUserList>([]);
+const chatModelRef = ref<InstanceType<typeof ChatModel> | null>(null);
 
+// 获取用户列表
 const getUserList = async () => {
   const { data } = await request.get('/user/list');
   userList.value = data.data;
 };
 
 getUserList();
+
+// 发送消息
+const send = (message: string, uid: string) => {
+  console.log(message, uid);
+  chatModelRef.value?.clearMessage();
+};
 
 // TODO 用于记录公告信息
 const notice = null;
