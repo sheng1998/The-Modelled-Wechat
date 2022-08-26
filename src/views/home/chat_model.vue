@@ -5,9 +5,10 @@
         {{ user.username }}
       </div>
       <ElScrollbar></ElScrollbar>
-      <div class="footer">
+      <div class="footer" @click="inputFocus">
         <ElScrollbar>
           <el-input
+            ref="textareaRef"
             v-model="message"
             autosize
             resize="none"
@@ -40,7 +41,6 @@ const props = defineProps({
 const emits = defineEmits(['send']);
 
 const message = ref('');
-
 const send = () => {
   if (!message.value.trim()) {
     ElMessage.warning({
@@ -51,9 +51,13 @@ const send = () => {
   }
   emits('send', message.value.trim(), props.user?.id || '');
 };
-
 const clearMessage = () => {
   message.value = '';
+};
+
+const textareaRef = ref<InstanceType<typeof ElInput> | null>(null);
+const inputFocus = () => {
+  textareaRef.value?.focus();
 };
 
 defineExpose({ clearMessage });
