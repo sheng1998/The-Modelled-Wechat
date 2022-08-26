@@ -2,7 +2,7 @@
   <div class="home flex-center">
     <div class="wrap flex">
       <SideBar></SideBar>
-      <UserList @select="currentUser = $event"></UserList>
+      <UserList :user-list="userList" @select="currentUser = $event"></UserList>
       <ChatModel :class="{ 'right-border': notice }" :user="currentUser"></ChatModel>
       <NoticeBoard v-if="notice" class="notice-board"></NoticeBoard>
     </div>
@@ -15,9 +15,18 @@ import SideBar from '@/views/layout/sidebar.vue';
 import UserList from './user_list.vue';
 import ChatModel from './chat_model.vue';
 import NoticeBoard from './notice_board.vue';
-import { User } from '@/typings/user';
+import request from '@/server';
+import { User, UserList as TUserList } from '@/typings/user';
 
 const currentUser = ref<User | undefined>(undefined);
+const userList = ref<TUserList>([]);
+
+const getUserList = async () => {
+  const { data } = await request.get('/user/list');
+  userList.value = data.data;
+};
+
+getUserList();
 
 // TODO 用于记录公告信息
 const notice = null;

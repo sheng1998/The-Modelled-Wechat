@@ -51,7 +51,7 @@
         @click="$emit('select', user)"
       >
         <div class="avatar flex-center">
-          <img src="/avatar/avatar_01.png" :alt="user.username">
+          <img :src="user.avatar || '/avatar/avatar_01.png'" :alt="user.username">
         </div>
         <div class="info">
           <div class="top flex">
@@ -73,40 +73,18 @@
 
 <script lang="ts" setup>
 import { ElScrollbar } from 'element-plus';
-import { ref } from 'vue';
+import { PropType } from 'vue';
 import SearchBar from './search_bar.vue';
 import { UserList } from '@/typings/user';
 
-const emits = defineEmits(['select']);
+defineProps({
+  userList: {
+    type: Array as PropType<UserList>,
+    required: true,
+  },
+});
 
-const userList = ref<UserList>([{
-  username: '李白',
-  id: 'libai',
-}, {
-  username: '韩信',
-  id: 'hanxin',
-}, {
-  username: '周瑜',
-  id: 'zhouyu',
-}, {
-  username: '安琪拉',
-  id: 'anqila',
-}, {
-  username: '李元芳',
-  id: 'liyuanfang',
-}, {
-  username: '妲己',
-  id: 'daji',
-}, {
-  username: '程咬金',
-  id: 'chengyaojin',
-}, {
-  username: '项羽',
-  id: 'xiangyu',
-}, {
-  username: '貂蝉',
-  id: 'diaochan',
-}]);
+const emits = defineEmits(['select']);
 
 const selectAssistant = () => {
   emits('select', {
