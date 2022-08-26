@@ -16,6 +16,7 @@
  */
 
 import { io } from 'socket.io-client';
+import { getCookie } from './cookie';
 
 export default (uid: string) => {
   // socket 连接的url
@@ -23,7 +24,8 @@ export default (uid: string) => {
   // socket 连接
   const socket = io(url, {
     transports: ['websocket'],
-    auth: { uid },
+    // 后端需要这个cookie来做校验
+    auth: { uid, session: getCookie('session_id') },
   });
 
   socket.on('connect', () => {
