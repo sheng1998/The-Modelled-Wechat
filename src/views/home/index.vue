@@ -2,10 +2,15 @@
   <div v-if="socket" class="home flex-center">
     <div class="wrap flex">
       <SideBar></SideBar>
-      <UserList :user-list="userList" @select="currentUser = $event"></UserList>
+      <UserList
+        :self="userStore.id"
+        :user-list="userList"
+        @select="currentUser = $event"
+      ></UserList>
       <ChatModel
         ref="chatModelRef"
         :class="{ 'right-border': notice }"
+        :self="userStore.id"
         :user="currentUser"
         @send="send"
       ></ChatModel>
@@ -22,8 +27,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { ElEmpty } from 'element-plus';
+import { nanoid } from 'nanoid';
 import { Socket } from 'socket.io-client';
 // eslint-disable-next-line
 import { DefaultEventsMap } from '@socket.io/component-emitter';
@@ -34,7 +40,7 @@ import NoticeBoard from './notice_board.vue';
 import socketConnection from '@/utils/socket';
 import sleep from '@/utils/sleep';
 import request from '@/server';
-import { User, UserList as TUserList } from '@/typings/user';
+import { Message, User, UserList as TUserList } from '@/typings/user';
 import { SocketType } from '@/typings/socket';
 import { useUserStore } from '@/store/user';
 
@@ -52,7 +58,32 @@ const chatModelRef = ref<InstanceType<typeof ChatModel> | null>(null);
 // 获取用户列表
 const getUserList = async () => {
   const { data } = await request.get('/user/list');
+  data.data.forEach((user: User) => {
+    user.unread = 0;
+    user.messages = [];
+  });
   userList.value = data.data;
+};
+
+// 注册socket监听器
+const socketListener = () => {
+  // 收到用户消息
+  // TODO 内容解码
+  socket.value?.on('message', (data: Message) => {
+    console.log('收到消息!', data);
+    // TODO 用户列表重新排序
+    for (let i = 0; i < userList.value.length; i += 1) {
+      const user = userList.value[i];
+      if (user.id === data.uid) {
+        data.time = Date.now();
+        user.messages.push(data);
+        nextTick(() => {
+          chatModelRef.value?.scrollbarToBottom();
+        });
+        break;
+      }
+    }
+  });
 };
 
 // 监听用户id的变化获取用户列表和连接socket
@@ -63,15 +94,34 @@ watch(() => userStore.id, async (id) => {
   const connect = await socketConnection(id) as Socket<DefaultEventsMap, DefaultEventsMap>;
   await sleep(500 - (Date.now() - startTime));
   socket.value = connect;
+  socketListener();
 }, {
   immediate: true,
 });
 
 // 发送消息
+// TODO 内容加密
 const send = (message: string, uid: string, type: SocketType = 'text') => {
-  console.log(message, uid, type);
+  console.log('发送消息!', { message, uid, type });
   chatModelRef.value?.clearMessage();
   socket.value?.emit('message', { uid, message, type });
+  // TODO 用户列表重新排序
+  for (let i = 0; i < userList.value.length; i += 1) {
+    const user = userList.value[i];
+    if (user.id === uid) {
+      user.messages.push({
+        id: nanoid(),
+        uid: userStore.id,
+        message,
+        type,
+        time: Date.now(),
+      });
+      nextTick(() => {
+        chatModelRef.value?.scrollbarToBottom();
+      });
+      break;
+    }
+  }
 };
 
 // TODO 用于记录公告信息

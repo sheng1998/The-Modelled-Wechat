@@ -4,7 +4,35 @@
       <div class="header flex-vertical-center">
         {{ user.username }}
       </div>
-      <ElScrollbar></ElScrollbar>
+      <ElScrollbar ref="scrollbarRef" class="message-wrap">
+        <!-- TODO 根据消息类型渲染 -->
+        <div v-if="user.messages.length" id="message-wrap">
+          <div
+            v-for="message in user.messages"
+            :key="message.id"
+            class="message"
+            :class="{ my: message.uid === self }"
+          >
+            <div class="time">
+              {{ formatTime(message.time) }}
+            </div>
+            <div class="body flex">
+              <div class="avatar flex-center">
+                <img :src="user.avatar || '/avatar/avatar_01.png'" :alt="user.username">
+              </div>
+              <div class="content">
+                <!-- 处理换行事件 -->
+                <div
+                  v-for="(item, index) in message.message.split('\n')"
+                  :key="index"
+                >
+                  {{ item || ' ' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ElScrollbar>
       <div class="footer" @click="inputFocus">
         <ElScrollbar>
           <el-input
@@ -26,13 +54,18 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
+import { PropType, ref, watch } from 'vue';
 import {
   ElScrollbar, ElInput, ElButton, ElMessage,
 } from 'element-plus';
+import { formatTime } from '@/utils/time';
 import { User } from '@/typings/user';
 
 const props = defineProps({
+  self: {
+    type: String,
+    default: '',
+  },
   user: {
     type: Object as PropType<User>,
   },
@@ -41,6 +74,7 @@ const props = defineProps({
 const emits = defineEmits(['send']);
 
 const message = ref('');
+// 发送消息
 const send = () => {
   if (!message.value.trim()) {
     ElMessage.warning({
@@ -51,26 +85,63 @@ const send = () => {
   }
   emits('send', message.value.trim(), props.user?.id || '', 'text');
 };
+// 清空消息
 const clearMessage = () => {
   message.value = '';
 };
 
+// 输入框对象
 const textareaRef = ref<InstanceType<typeof ElInput> | null>(null);
+// 输入框聚焦
 const inputFocus = () => {
   textareaRef.value?.focus();
 };
 
-defineExpose({ clearMessage });
+const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null);
+// 消息列表滚动到底部
+const scrollbarToBottom = () => {
+  setTimeout(() => {
+    scrollbarRef.value?.setScrollTop(document.getElementById('message-wrap')?.clientHeight || 0);
+    scrollbarRef.value?.update();
+  }, 0);
+};
+
+defineExpose({ clearMessage, scrollbarToBottom });
+
+watch(() => props.user, () => {
+  clearMessage();
+  scrollbarToBottom();
+  inputFocus();
+});
 </script>
 
 <style lang="scss" scoped>
 @import '$style/variable';
 $header-height: 48px;
 $footer-height: 150px;
+$background-color: #f5f5f5;
+@mixin triangle-style($direction: left, $color: #fff, $size: 8px) {
+  position: absolute;
+  top: 10px;
+  width:0;
+  height:0;
+  border-top: $size solid transparent;
+  border-bottom: $size solid transparent;
+  content: '';
+  @if $direction == left {
+    left: calc(-1 * #{$size});
+    border-right: $size solid $color;
+  }
+  @else {
+    right: calc(-1 * #{$size});
+    border-left: $size solid $color;
+  }
+}
+
 .chat-model {
   width: $chat-model-width;
   height: 100%;
-  background-color: #fff;
+  background-color: $background-color;
   .header {
     height: $header-height;
     padding: 0 20px;
@@ -79,6 +150,72 @@ $footer-height: 150px;
   }
   & > .el-scrollbar {
     height: calc(100% - #{$header-height} - #{$footer-height});
+  }
+  .message-wrap {
+    padding: 20px;
+    #message-wrap {
+      display: inline-block;
+      width: 100%;
+    }
+    .message {
+      width: 100%;
+      & + .message {
+        margin-top: 30px;
+      }
+      .content {
+        position: relative;
+        padding: 10px;
+        border-radius: 6px;
+      }
+      .time {
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #b9b9b9;
+      }
+      .avatar {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+        border-radius: 4px;
+        background-color: #d8d8d8;
+        overflow: hidden;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+    .message:not(.my) {
+      padding-right: 30%;
+      .content {
+        background-color: #fff;
+        &::before {
+          @include triangle-style(left, #fff);
+        }
+      }
+    }
+    .message.my {
+      padding-left: 30%;
+      float: right;
+      .body {
+        flex-direction: row-reverse;
+      }
+      .content {
+        background-color: #95ec69;
+        &::before {
+          @include triangle-style(right, #95ec69);
+        }
+      }
+      .avatar {
+        margin-right: 0px;
+        margin-left: 12px;
+      }
+      .time {
+        text-align: right;
+      }
+    }
   }
   .footer {
     height: $footer-height;
@@ -94,6 +231,9 @@ $footer-height: 150px;
         border: none;
         box-shadow: none;
         outline: none;
+      }
+      :deep(textarea) {
+        background-color: $background-color;
       }
     }
     .el-button {

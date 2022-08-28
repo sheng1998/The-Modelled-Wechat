@@ -58,12 +58,16 @@
             <div class="name ellipsis">
               {{ user.username }}
             </div>
-            <div class="time">
-              {{ '时间' }}
+            <div
+              v-if="user.messages.length"
+              class="time"
+              :title="formatTime(user.messages[user.messages.length - 1].time)"
+            >
+              {{ timeToSimpleness(user.messages[user.messages.length - 1].time) }}
             </div>
           </div>
-          <div class="message ellipsis">
-            {{ user.id }}
+          <div v-if="user.messages.length" class="message ellipsis">
+            {{ user.messages[user.messages.length - 1].message }}
           </div>
         </div>
       </div>
@@ -76,8 +80,13 @@ import { ElScrollbar } from 'element-plus';
 import { PropType } from 'vue';
 import SearchBar from './search_bar.vue';
 import { UserList } from '@/typings/user';
+import { formatTime, timeToSimpleness } from '@/utils/time';
 
-defineProps({
+const props = defineProps({
+  self: {
+    type: String,
+    default: '',
+  },
   userList: {
     type: Array as PropType<UserList>,
     required: true,
@@ -87,10 +96,7 @@ defineProps({
 const emits = defineEmits(['select']);
 
 const selectAssistant = () => {
-  emits('select', {
-    username: '文件传输助手',
-    id: 'wenjianchuanshuzhushou',
-  });
+  emits('select', { username: '文件传输助手', id: props.self });
 };
 
 const selectRobot = (id: string) => {
@@ -132,10 +138,14 @@ const selectRobot = (id: string) => {
     }
     .name {
       flex-shrink: 0;
-      width: 135px;
+      width: 130px;
     }
     .time {
+      flex-shrink: 0;
+      width: 53px;
+      text-align: right;
       color: #b9b9b9;
+      font-size: 12px;
     }
     .message {
       width: 160px;

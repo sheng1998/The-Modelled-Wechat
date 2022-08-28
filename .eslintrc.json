@@ -62,6 +62,7 @@
     "vue/require-default-prop": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "no-restricted-syntax": "off",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "no-case-declarations": "off"
   }
 }
