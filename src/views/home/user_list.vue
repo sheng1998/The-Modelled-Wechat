@@ -50,6 +50,7 @@
         class="user flex"
         @click="$emit('select', user)"
       >
+        <!-- TODO 未读消息条数 -->
         <div class="avatar flex-center">
           <img :src="user.avatar || '/avatar/avatar_01.png'" :alt="user.username">
         </div>
@@ -66,8 +67,14 @@
               {{ timeToSimpleness(user.messages[user.messages.length - 1].time) }}
             </div>
           </div>
-          <div v-if="user.messages.length" class="message ellipsis">
-            {{ user.messages[user.messages.length - 1].message }}
+          <div v-if="user.messages.length || user.input" class="message ellipsis">
+            <template v-if="user.input">
+              <span style="color: red;">[草稿]</span>
+              {{ user.input }}
+            </template>
+            <template v-else>
+              {{ user.messages[user.messages.length - 1].message }}
+            </template>
           </div>
         </div>
       </div>

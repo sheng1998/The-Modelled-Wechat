@@ -5,7 +5,7 @@
       <UserList
         :self="userStore.id"
         :user-list="userList"
-        @select="currentUser = $event"
+        @select="changeCurrentUser"
       ></UserList>
       <ChatModel
         ref="chatModelRef"
@@ -54,6 +54,21 @@ const userStore = useUserStore();
 const currentUser = ref<User | undefined>(undefined);
 const userList = ref<TUserList>([]);
 const chatModelRef = ref<InstanceType<typeof ChatModel> | null>(null);
+
+// 切换用户
+const changeCurrentUser = (user: User) => {
+  if (currentUser.value) {
+    for (let i = 0; i < userList.value.length; i += 1) {
+      const item = userList.value[i];
+      if (item.id === currentUser.value.id) {
+        // 记录未发送消息
+        item.input = chatModelRef.value?.message || '';
+        break;
+      }
+    }
+  }
+  currentUser.value = user;
+};
 
 // 获取用户列表
 const getUserList = async () => {

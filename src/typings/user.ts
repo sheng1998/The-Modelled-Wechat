@@ -15,6 +15,7 @@ interface User {
   privileges: number;
   unread?: number; // 未读消息
   messages: Message[];
+  input?: string; // 输入框的未发送消息
 }
 
 type UserList = User[];

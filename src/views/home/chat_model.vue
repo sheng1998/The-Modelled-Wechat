@@ -106,12 +106,13 @@ const scrollbarToBottom = () => {
   }, 0);
 };
 
-defineExpose({ clearMessage, scrollbarToBottom });
+defineExpose({ message, clearMessage, scrollbarToBottom });
 
-watch(() => props.user, () => {
+watch(() => props.user, (user) => {
   clearMessage();
   scrollbarToBottom();
   inputFocus();
+  message.value = user?.input || '';
 });
 </script>
 
