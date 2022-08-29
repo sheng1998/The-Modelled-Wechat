@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { ElEmpty } from 'element-plus';
 import { nanoid } from 'nanoid';
 import { Socket } from 'socket.io-client';
@@ -43,6 +43,7 @@ import request from '@/server';
 import { Message, User, UserList as TUserList } from '@/typings/user';
 import { SocketType } from '@/typings/socket';
 import { useUserStore } from '@/store/user';
+// import { getTimestamp } from '@/utils/time';
 
 // 记录初始时间戳，用户页面切换防止闪烁
 const startTime = Date.now();
@@ -80,25 +81,66 @@ const getUserList = async () => {
   userList.value = data.data;
 };
 
+/**
+ * 私聊消息变化(发送或接收消息)
+ * @param {string} uid 接受方的id
+ * @param {string | Message} data 发送、接受的消息内容
+ * @param {'receive' | 'send'} type 发送或接收
+ */
+const userMessageChange = (
+  uid: string,
+  data: string | Partial<Message> & Pick<Message, 'message'>,
+  type: 'receive' | 'send' = 'send',
+) => {
+  if (typeof data === 'string') {
+    data = { message: data };
+  }
+  if (!data.uid) data.uid = userStore.id;
+  if (!data.id) data.id = nanoid();
+  if (!data.time) data.time = Date.now();
+  if (!data.type) data.type = 'text';
+  if (type === 'send') {
+    // TODO 加密
+  } else {
+    // TODO 解密
+  }
+  // console.log(data, userStore.id, data.uid)
+  // TODO 用户列表重新排序
+  for (let i = 0; i < userList.value.length; i += 1) {
+    const user = userList.value[i];
+    if (user.id === uid) {
+      user.messages.push(data as Message);
+      chatModelRef.value?.scrollbarToBottom();
+      // 新接受的消息放到第一位
+      userList.value.splice(i, 1);
+      userList.value.unshift(user);
+      break;
+    }
+  }
+  // 整体重新排序(不需要这么复杂)
+  // userList.value = userList.value.sort((a, b) => {
+  //   const time1 = getTimestamp(a.messages[a.messages.length - 1]?.time || 0);
+  //   const time2 = getTimestamp(b.messages[b.messages.length - 1]?.time || 0);
+  //   return time2 - time1;
+  // });
+};
+
 // 注册socket监听器
 const socketListener = () => {
   // 收到用户消息
-  // TODO 内容解码
   socket.value?.on('message', (data: Message) => {
     console.log('收到消息!', data);
-    // TODO 用户列表重新排序
-    for (let i = 0; i < userList.value.length; i += 1) {
-      const user = userList.value[i];
-      if (user.id === data.uid) {
-        data.time = Date.now();
-        user.messages.push(data);
-        nextTick(() => {
-          chatModelRef.value?.scrollbarToBottom();
-        });
-        break;
-      }
-    }
+    userMessageChange(data.uid, data, 'receive');
   });
+};
+
+// 发送消息
+// TODO 内容加密
+const send = (message: string, uid: string, type: SocketType = 'text') => {
+  console.log('发送消息!', { message, uid, type });
+  chatModelRef.value?.clearMessage();
+  socket.value?.emit('message', { uid, message, type });
+  userMessageChange(uid, message);
 };
 
 // 监听用户id的变化获取用户列表和连接socket
@@ -113,31 +155,6 @@ watch(() => userStore.id, async (id) => {
 }, {
   immediate: true,
 });
-
-// 发送消息
-// TODO 内容加密
-const send = (message: string, uid: string, type: SocketType = 'text') => {
-  console.log('发送消息!', { message, uid, type });
-  chatModelRef.value?.clearMessage();
-  socket.value?.emit('message', { uid, message, type });
-  // TODO 用户列表重新排序
-  for (let i = 0; i < userList.value.length; i += 1) {
-    const user = userList.value[i];
-    if (user.id === uid) {
-      user.messages.push({
-        id: nanoid(),
-        uid: userStore.id,
-        message,
-        type,
-        time: Date.now(),
-      });
-      nextTick(() => {
-        chatModelRef.value?.scrollbarToBottom();
-      });
-      break;
-    }
-  }
-};
 
 // TODO 用于记录公告信息
 const notice = null;
