@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { ElEmpty } from 'element-plus';
 import { nanoid } from 'nanoid';
 import { Socket } from 'socket.io-client';
@@ -43,8 +44,11 @@ import request from '@/server';
 import { Message, User, UserList as TUserList } from '@/typings/user';
 import { SocketType } from '@/typings/socket';
 import { useUserStore } from '@/store/user';
+import mergeQuery from '@/utils/merge_query';
 // import { getTimestamp } from '@/utils/time';
 
+const route = useRoute();
+const router = useRouter();
 // 记录初始时间戳，用户页面切换防止闪烁
 const startTime = Date.now();
 // socket对象
@@ -68,6 +72,8 @@ const changeCurrentUser = (user: User) => {
       }
     }
   }
+  const query = mergeQuery(route.query, { uid: user.id });
+  router.replace({ query });
   currentUser.value = user;
 };
 
@@ -77,6 +83,9 @@ const getUserList = async () => {
   data.data.forEach((user: User) => {
     user.unread = 0;
     user.messages = [];
+    if (route.query.uid === user.id) {
+      currentUser.value = user;
+    }
   });
   userList.value = data.data;
 };
@@ -135,7 +144,6 @@ const socketListener = () => {
 };
 
 // 发送消息
-// TODO 内容加密
 const send = (message: string, uid: string, type: SocketType = 'text') => {
   console.log('发送消息!', { message, uid, type });
   chatModelRef.value?.clearMessage();
