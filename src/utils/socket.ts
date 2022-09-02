@@ -4,13 +4,13 @@
  * socket断开连接
  *    socket.on('disconnect', () => void)
  * 用户之间的私聊
- *    socket.emit('message', { uid, message, type })
+ *    socket.emit('message', { receive_user_id, send_user_id, message, type })
  * 发送群消息
- *    socket.emit('message-group', { gid, message, type })
+ *    socket.emit('message-group', { receive_user_id, send_user_id, message, type })
  * 接收到用户的消息
- *    socket.on('message', { uid, message, type })
+ *    socket.on('message', { receive_user_id, send_user_id, message, type })
  * 接收到群消息
- *    socket.on('message-group', { gid, message, type })
+ *    socket.on('message-group', { receive_user_id, send_user_id, message, type })
  * 接收到公告消息
  *    socket.on('notice', { nid, message, type })
  */

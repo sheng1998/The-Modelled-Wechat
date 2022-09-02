@@ -2,7 +2,8 @@ import { SocketType } from './socket';
 
 interface Message {
   id: string,
-  uid: string;
+  send_user_id: string;
+  receive_user_id: string;
   message: string,
   type: SocketType;
   time: number | Date | string;

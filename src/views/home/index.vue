@@ -10,7 +10,6 @@
       <ChatModel
         ref="chatModelRef"
         :class="{ 'right-border': notice }"
-        :self="userStore.id"
         :user="currentUser"
         @send="send"
       ></ChatModel>
@@ -85,7 +84,7 @@ const getUserList = async () => {
 
 // 获取机器人列表
 const getRobotList = async () => {
-  // 临时的机器人列表
+  // TODO 临时的机器人列表
   robotList.value = [{
     id: '111111',
     username: '机器人1',
@@ -105,32 +104,23 @@ const getRobotList = async () => {
 
 /**
  * 私聊消息变化(发送或接收消息)
- * @param {string} uid 接受方的id
- * @param {string | Message} data 发送、接受的消息内容
- * @param {'receive' | 'send'} type 发送或接收
+ * @param {Message} data 发送、接受的消息内容
  */
-const userMessageChange = (
-  uid: string,
-  data: string | Partial<Message> & Pick<Message, 'message'>,
-  type: 'receive' | 'send' = 'send',
-) => {
-  if (typeof data === 'string') {
-    data = { message: data };
-  }
-  if (!data.uid) data.uid = userStore.id;
+const userMessageChange = (data: Partial<Message> & Pick<Message, 'message'>) => {
+  if (!data.send_user_id) data.send_user_id = userStore.id;
+  if (!data.receive_user_id) data.send_user_id = userStore.id;
   if (!data.id) data.id = nanoid();
   if (!data.time) data.time = Date.now();
   if (!data.type) data.type = 'text';
-  if (type === 'send') {
-    // TODO 加密
-  } else {
+  if (data.receive_user_id === userStore.id) {
     // TODO 解密
+  } else {
+    // TODO 加密
   }
-  // console.log(data, userStore.id, data.uid)
   // TODO 用户列表重新排序
   for (let i = 0; i < userList.value.length; i += 1) {
     const user = userList.value[i];
-    if (user.id === uid) {
+    if (user.id === data.receive_user_id) {
       user.messages.push(data as Message);
       chatModelRef.value?.scrollbarToBottom();
       // 新接受的消息放到第一位
@@ -146,16 +136,25 @@ const socketListener = () => {
   // 收到用户消息
   socket.value?.on('message', (data: Message) => {
     console.log('收到消息!', data);
-    userMessageChange(data.uid, data, 'receive');
+    userMessageChange(data);
   });
 };
 
 // 发送消息
-const send = (message: string, uid: string, type: SocketType = 'text') => {
-  console.log('发送消息!', { message, uid, type });
+const send = (
+  message: string,
+  receive_user_id: string,
+  type: SocketType = 'text',
+) => {
+  console.log('发送消息!', { message, receive_user_id, type });
   chatModelRef.value?.clearMessage();
-  socket.value?.emit('message', { uid, message, type });
-  userMessageChange(uid, message);
+  socket.value?.emit('message', {
+    send_user_id: userStore.id,
+    receive_user_id: receive_user_id || userStore.id,
+    message,
+    type,
+  });
+  userMessageChange({ message, receive_user_id });
 };
 
 // 监听用户id的变化获取用户列表和连接socket

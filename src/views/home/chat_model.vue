@@ -11,7 +11,7 @@
             v-for="message in user.messages"
             :key="message.id"
             class="message"
-            :class="{ my: message.uid === self }"
+            :class="{ my: message.send_user_id === userStore.id }"
           >
             <div class="time">
               {{ formatTime(message.time) }}
@@ -60,18 +60,18 @@ import {
 } from 'element-plus';
 import { formatTime } from '@/utils/time';
 import { User } from '@/typings/user';
+import { useUserStore } from '@/store/user';
+
+const emits = defineEmits(['send']);
 
 const props = defineProps({
-  self: {
-    type: String,
-    default: '',
-  },
   user: {
     type: Object as PropType<User>,
   },
 });
 
-const emits = defineEmits(['send']);
+// 用户的状态信息
+const userStore = useUserStore();
 
 const message = ref('');
 // 发送消息
