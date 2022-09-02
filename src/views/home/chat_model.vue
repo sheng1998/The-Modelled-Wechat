@@ -39,7 +39,12 @@
           </div>
         </div>
       </ElScrollbar>
-      <div class="footer" @click="inputFocus">
+      <div :class="['footer', { 'has-toolbar': !user.isRobot }]" @click="inputFocus">
+        <div v-if="!user.isRobot" class="toolbar flex-vertical-center">
+          <span class="iconfont icon-emoji"></span>
+          <span class="iconfont icon-image"></span>
+          <span class="iconfont icon-file"></span>
+        </div>
         <ElScrollbar>
           <el-input
             ref="textareaRef"
@@ -126,6 +131,8 @@ watch(() => props.user, (user) => {
 @import '$style/variable';
 $header-height: 48px;
 $footer-height: 150px;
+$footer-textarea-height: 110px;
+$footer-toolbar-height: 28px;
 $background-color: #f5f5f5;
 @mixin triangle-style($direction: left, $color: #fff, $size: 8px) {
   position: absolute;
@@ -234,11 +241,22 @@ $background-color: #f5f5f5;
   .footer {
     height: $footer-height;
     border-top: 1px solid $border-color;
+    .toolbar {
+      height: $footer-toolbar-height;
+      padding: 0 10px;
+      .iconfont {
+        font-size: 20px;
+        cursor: pointer;
+      }
+      .iconfont + .iconfont {
+        margin-left: 15px;
+      }
+    }
     & > .el-scrollbar {
-      height: 110px;
+      height: $footer-textarea-height;
     }
     .el-textarea {
-      height: 110px;
+      height: $footer-textarea-height;
       outline: none;
       border: none;
       :deep(.el-textarea__inner) {
@@ -248,6 +266,12 @@ $background-color: #f5f5f5;
       }
       :deep(textarea) {
         background-color: $background-color;
+      }
+    }
+    &.has-toolbar > .el-scrollbar {
+      height: calc(#{$footer-textarea-height} - #{$footer-toolbar-height});
+      .el-textarea {
+        height: calc(#{$footer-textarea-height} - #{$footer-toolbar-height});
       }
     }
     .el-button {

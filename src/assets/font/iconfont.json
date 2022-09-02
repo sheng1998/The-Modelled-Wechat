@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4766917",
+      "name": "image",
+      "font_class": "image",
+      "unicode": "e7de",
+      "unicode_decimal": 59358
+    },
+    {
+      "icon_id": "5379879",
+      "name": "emoji",
+      "font_class": "emoji",
+      "unicode": "e6fc",
+      "unicode_decimal": 59132
+    },
+    {
+      "icon_id": "15838487",
+      "name": "file-open",
+      "font_class": "file",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
       "icon_id": "25885547",
       "name": "机器人、智能-04",
       "font_class": "robot2",
