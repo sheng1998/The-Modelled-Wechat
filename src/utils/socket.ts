@@ -20,7 +20,7 @@ import { getCookie } from './cookie';
 
 export default (uid: string) => new Promise((resolve, reject) => {
   // socket 连接的url
-  const url = import.meta.env.MODE === 'development' ? 'ws://127.0.0.1:3002' : 'ws://119.91.74.150:3002:3002';
+  const url = import.meta.env.MODE === 'development' ? 'ws://127.0.0.1:3002' : 'ws://119.91.74.150:3002';
   // socket 连接
   const socket = io(url, {
     transports: ['websocket'],
