@@ -44,6 +44,7 @@ import { Message, User, UserList as TUserList } from '@/typings/user';
 import { SocketType } from '@/typings/socket';
 import { useUserStore } from '@/store/user';
 import mergeQuery from '@/utils/merge_query';
+import { pushMessageToAssistant } from './config';
 
 const route = useRoute();
 const router = useRouter();
@@ -117,7 +118,13 @@ const userMessageChange = (data: Partial<Message> & Pick<Message, 'message'>) =>
   } else {
     // TODO 加密
   }
-  // TODO 用户列表重新排序
+  // 判断是否是文件传输助手
+  if (data.receive_user_id === userStore.id) {
+    pushMessageToAssistant(data as Message);
+    return;
+  }
+  // TODO 判断是否是机器人
+  // 用户列表重新排序
   for (let i = 0; i < userList.value.length; i += 1) {
     const user = userList.value[i];
     if (user.id === data.receive_user_id) {

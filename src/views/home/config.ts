@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { User } from '@/typings/user';
+import { Message, User } from '@/typings/user';
 
 // 文件传输助手
 const assistant = ref<User>({
@@ -11,4 +11,9 @@ const assistant = ref<User>({
   input: '',
 });
 
-export { assistant };
+// 给文件传输助手发消息
+const pushMessageToAssistant = (message: Message) => {
+  assistant.value.messages.push(message);
+};
+
+export { assistant, pushMessageToAssistant };
