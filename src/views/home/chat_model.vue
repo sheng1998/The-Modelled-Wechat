@@ -17,8 +17,14 @@
               {{ formatTime(message.time) }}
             </div>
             <div class="body flex">
-              <div class="avatar flex-center">
-                <img :src="user.avatar || '/avatar/avatar_01.png'" :alt="user.username">
+              <div class="avatar flex-center" :class="{ robot: user.isRobot }">
+                <img
+                  v-if="message.send_user_id === userStore.id"
+                  :src="userStore.avatar || '/avatar/avatar_01.png'"
+                  :alt="userStore.username"
+                >
+                <span v-else-if="user.isRobot" :class="['iconfont', user.avatar]"></span>
+                <img v-else :src="user.avatar || '/avatar/avatar_01.png'" :alt="user.username">
               </div>
               <div class="content">
                 <!-- 处理换行事件 -->
@@ -215,6 +221,13 @@ $background-color: #f5f5f5;
       }
       .time {
         text-align: right;
+      }
+    }
+    .robot.avatar {
+      background-color: #1677d2;
+      color: #fff;
+      span {
+        font-size: 22px;
       }
     }
   }

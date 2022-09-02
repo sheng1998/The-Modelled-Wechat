@@ -11,6 +11,7 @@ interface Message {
 
 interface User {
   id: string;
+  isRobot?: boolean;
   username: string;
   avatar: string;
   privileges: number;

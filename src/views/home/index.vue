@@ -88,6 +88,7 @@ const getRobotList = async () => {
   // TODO 临时的机器人列表
   robotList.value = [{
     id: '111111',
+    isRobot: true,
     username: '机器人1',
     avatar: 'icon-robot',
     privileges: 1,
@@ -95,6 +96,7 @@ const getRobotList = async () => {
     input: '',
   }, {
     id: '22222',
+    isRobot: true,
     username: '机器人2',
     avatar: 'icon-robot2',
     privileges: 1,
@@ -123,7 +125,15 @@ const userMessageChange = (data: Partial<Message> & Pick<Message, 'message'>) =>
     pushMessageToAssistant(data as Message);
     return;
   }
-  // TODO 判断是否是机器人
+  // 判断是否是机器人
+  for (let i = 0; i < robotList.value.length; i += 1) {
+    const robot = robotList.value[i];
+    if (robot.id === data.receive_user_id) {
+      robot.messages.push(data as Message);
+      chatModelRef.value?.scrollbarToBottom();
+      return;
+    }
+  }
   // 用户列表重新排序
   for (let i = 0; i < userList.value.length; i += 1) {
     const user = userList.value[i];
