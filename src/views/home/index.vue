@@ -3,8 +3,8 @@
     <div class="wrap flex">
       <SideBar></SideBar>
       <UserList
-        :self="userStore.id"
         :user-list="userList"
+        :robot-list="robotList"
         @select="changeCurrentUser"
       ></UserList>
       <ChatModel
@@ -45,7 +45,6 @@ import { Message, User, UserList as TUserList } from '@/typings/user';
 import { SocketType } from '@/typings/socket';
 import { useUserStore } from '@/store/user';
 import mergeQuery from '@/utils/merge_query';
-// import { getTimestamp } from '@/utils/time';
 
 const route = useRoute();
 const router = useRouter();
@@ -58,19 +57,13 @@ const userStore = useUserStore();
 
 const currentUser = ref<User | undefined>(undefined);
 const userList = ref<TUserList>([]);
+const robotList = ref<TUserList>([]);
 const chatModelRef = ref<InstanceType<typeof ChatModel> | null>(null);
 
 // 切换用户
 const changeCurrentUser = (user: User) => {
   if (currentUser.value) {
-    for (let i = 0; i < userList.value.length; i += 1) {
-      const item = userList.value[i];
-      if (item.id === currentUser.value.id) {
-        // 记录未发送消息
-        item.input = chatModelRef.value?.message || '';
-        break;
-      }
-    }
+    currentUser.value.input = chatModelRef.value?.message || '';
   }
   const query = mergeQuery(route.query, { uid: user.id });
   router.replace({ query });
@@ -88,6 +81,26 @@ const getUserList = async () => {
     }
   });
   userList.value = data.data;
+};
+
+// 获取机器人列表
+const getRobotList = async () => {
+  // 临时的机器人列表
+  robotList.value = [{
+    id: '111111',
+    username: '机器人1',
+    avatar: 'icon-robot',
+    privileges: 1,
+    messages: [],
+    input: '',
+  }, {
+    id: '22222',
+    username: '机器人2',
+    avatar: 'icon-robot2',
+    privileges: 1,
+    messages: [],
+    input: '',
+  }];
 };
 
 /**
@@ -126,12 +139,6 @@ const userMessageChange = (
       break;
     }
   }
-  // 整体重新排序(不需要这么复杂)
-  // userList.value = userList.value.sort((a, b) => {
-  //   const time1 = getTimestamp(a.messages[a.messages.length - 1]?.time || 0);
-  //   const time2 = getTimestamp(b.messages[b.messages.length - 1]?.time || 0);
-  //   return time2 - time1;
-  // });
 };
 
 // 注册socket监听器
@@ -154,10 +161,11 @@ const send = (message: string, uid: string, type: SocketType = 'text') => {
 // 监听用户id的变化获取用户列表和连接socket
 watch(() => userStore.id, async (id) => {
   if (!id) return;
+  getRobotList();
   getUserList();
   if (socket.value) return;
   const connect = await socketConnection(id) as Socket<DefaultEventsMap, DefaultEventsMap>;
-  await sleep(500 - (Date.now() - startTime));
+  await sleep(200 - (Date.now() - startTime));
   socket.value = connect;
   socketListener();
 }, {
