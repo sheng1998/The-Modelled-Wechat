@@ -4,13 +4,19 @@
  * socket断开连接
  *    socket.on('disconnect', () => void)
  * 用户之间的私聊
- *    socket.emit('message', { receive_user_id, send_user_id, message, type })
+ *    socket.emit('message-private', { receive_user_id, send_user_id, message, type })
  * 发送群消息
  *    socket.emit('message-group', { receive_user_id, send_user_id, message, type })
+ * 给机器人发消息
+ *    socket.emit('message-robot', { receive_user_id, send_user_id, message, type })
  * 接收到用户的消息
- *    socket.on('message', { receive_user_id, send_user_id, message, type })
+ *    socket.on('message-private', { receive_user_id, send_user_id, message, type })
  * 接收到群消息
  *    socket.on('message-group', { receive_user_id, send_user_id, message, type })
+ * 接机器人消息
+ *    socket.on('message-robot', { receive_user_id, send_user_id, message, type })
+ * 同步消息到其他端(同一用户建立了多个连接)
+ *    socket.on('message-private-sync', { receive_user_id, send_user_id, message, type })
  * 接收到公告消息
  *    socket.on('notice', { nid, message, type })
  */

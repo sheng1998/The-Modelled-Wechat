@@ -2,28 +2,19 @@
   <div class="user-list">
     <SearchBar :user-list="userList" @select="$emit('select', $event)"></SearchBar>
     <ElScrollbar>
-      <UserItem class="assistant" :user="assistant" @select="$emit('select', assistant)">
-        <template #avatar>
-          <span class="iconfont icon-assistant"></span>
-        </template>
-      </UserItem>
-      <UserItem
-        v-for="robot in robotList"
-        :key="robot.id"
-        class="robot"
-        :user="robot"
-        @select="$emit('select', robot)"
-      >
-        <template #avatar>
-          <span :class="['iconfont', robot.avatar]"></span>
-        </template>
-      </UserItem>
       <UserItem
         v-for="user in userList"
         :key="user.id"
         :user="user"
+        :class="{
+          assistant: user.isAssistant,
+          robot: user.isRobot
+        }"
         @select="$emit('select', user)"
       >
+        <template v-if="user.isAssistant || user.isRobot" #avatar>
+          <span :class="['iconfont', user.avatar]"></span>
+        </template>
       </UserItem>
     </ElScrollbar>
   </div>
@@ -35,16 +26,11 @@ import { PropType } from 'vue';
 import SearchBar from './search_bar.vue';
 import UserItem from './user_item.vue';
 import { UserList } from '@/typings/user';
-import { assistant } from './config';
 
 defineEmits(['select']);
 
 defineProps({
   userList: {
-    type: Array as PropType<UserList>,
-    required: true,
-  },
-  robotList: {
     type: Array as PropType<UserList>,
     required: true,
   },

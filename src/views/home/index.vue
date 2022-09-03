@@ -4,7 +4,6 @@
       <SideBar></SideBar>
       <UserList
         :user-list="userList"
-        :robot-list="robotList"
         @select="changeCurrentUser"
       ></UserList>
       <ChatModel
@@ -26,10 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { Ref, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElEmpty } from 'element-plus';
-import { nanoid } from 'nanoid';
 import { Socket } from 'socket.io-client';
 // eslint-disable-next-line
 import { DefaultEventsMap } from '@socket.io/component-emitter';
@@ -41,103 +39,31 @@ import socketConnection from '@/utils/socket';
 import sleep from '@/utils/sleep';
 import request from '@/server';
 import { Message, User, UserList as TUserList } from '@/typings/user';
-import { SocketType } from '@/typings/socket';
+import { MessageType } from '@/typings/socket';
 import { useUserStore } from '@/store/user';
 import mergeQuery from '@/utils/merge_query';
-import { pushMessageToAssistant } from './config';
+import { assistant } from './config';
+import useMessage from './use/use_message';
 
 const route = useRoute();
 const router = useRouter();
 // 记录初始时间戳，用户页面切换防止闪烁
 const startTime = Date.now();
 // socket对象
-const socket = ref<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
+const socket: Ref<Socket<DefaultEventsMap, DefaultEventsMap> | null> = ref(null);
 // 用户的状态信息
 const userStore = useUserStore();
 
 const currentUser = ref<User | undefined>(undefined);
-const userList = ref<TUserList>([]);
-const robotList = ref<TUserList>([]);
+const userList: Ref<TUserList> = ref([]);
 const chatModelRef = ref<InstanceType<typeof ChatModel> | null>(null);
 
-// 切换用户
-const changeCurrentUser = (user: User) => {
-  if (currentUser.value) {
-    currentUser.value.input = chatModelRef.value?.message || '';
-  }
-  const query = mergeQuery(route.query, { uid: user.id });
-  router.replace({ query });
-  currentUser.value = user;
-};
-
-// 获取用户列表
-const getUserList = async () => {
-  const { data } = await request.get('/user/list');
-  data.data.forEach((user: User) => {
-    user.unread = 0;
-    user.messages = [];
-    if (route.query.uid === user.id) {
-      currentUser.value = user;
-    }
-  });
-  userList.value = data.data;
-};
-
-// 获取机器人列表
-const getRobotList = async () => {
-  // TODO 临时的机器人列表
-  robotList.value = [{
-    id: '111111',
-    isRobot: true,
-    username: '机器人1',
-    avatar: 'icon-robot',
-    privileges: 1,
-    messages: [],
-    input: '',
-  }, {
-    id: '22222',
-    isRobot: true,
-    username: '机器人2',
-    avatar: 'icon-robot2',
-    privileges: 1,
-    messages: [],
-    input: '',
-  }];
-};
-
-/**
- * 私聊消息变化(发送或接收消息)
- * @param {Message} data 发送、接受的消息内容
- */
-const userMessageChange = (data: Partial<Message> & Pick<Message, 'message'>) => {
-  if (!data.send_user_id) data.send_user_id = userStore.id;
-  if (!data.receive_user_id) data.send_user_id = userStore.id;
-  if (!data.id) data.id = nanoid();
-  if (!data.time) data.time = Date.now();
-  if (!data.type) data.type = 'text';
-  if (data.receive_user_id === userStore.id) {
-    // TODO 解密
-  } else {
-    // TODO 加密
-  }
-  // 判断是否是文件传输助手
-  if (data.receive_user_id === userStore.id) {
-    pushMessageToAssistant(data as Message);
-    return;
-  }
-  // 判断是否是机器人
-  for (let i = 0; i < robotList.value.length; i += 1) {
-    const robot = robotList.value[i];
-    if (robot.id === data.receive_user_id) {
-      robot.messages.push(data as Message);
-      chatModelRef.value?.scrollbarToBottom();
-      return;
-    }
-  }
+// 发送或接收消息的回调
+const messageCallback = (data: Message) => {
   // 用户列表重新排序
   for (let i = 0; i < userList.value.length; i += 1) {
     const user = userList.value[i];
-    if (user.id === data.receive_user_id) {
+    if (user.id === data.send_user_id || user.id === data.receive_user_id) {
       user.messages.push(data as Message);
       chatModelRef.value?.scrollbarToBottom();
       // 新接受的消息放到第一位
@@ -148,12 +74,64 @@ const userMessageChange = (data: Partial<Message> & Pick<Message, 'message'>) =>
   }
 };
 
+const { privateChat } = useMessage(socket, userStore, messageCallback);
+
+// 切换用户
+const changeCurrentUser = (user: User) => {
+  if (currentUser.value) {
+    currentUser.value.input = chatModelRef.value?.message || '';
+  }
+  const query = mergeQuery(route.query, { uid: user.id || userStore.id });
+  router.replace({ query });
+  currentUser.value = user;
+};
+
+// 获取用户列表
+const getUserList = async () => {
+  const { data: { data: list } } = await request.get('/user/list');
+  // TODO 获取机器人列表（await）
+  // 插入文件传输助手
+  list.splice(0, 0, { ...assistant.value, id: userStore.id });
+  list.splice(1, 0, ...(await getRobotList()));
+  // 插入机器人列表
+  list.forEach((user: User) => {
+    user.unread = 0;
+    user.messages = [];
+    if (route.query.uid === user.id) {
+      currentUser.value = user;
+    }
+  });
+  userList.value = list;
+};
+
+// 获取机器人列表
+const getRobotList = async () => [{
+  id: '111111',
+  isRobot: true,
+  username: '机器人1',
+  avatar: 'icon-robot',
+  privileges: 1,
+  messages: [],
+  input: '',
+}, {
+  id: '22222',
+  isRobot: true,
+  username: '机器人2',
+  avatar: 'icon-robot2',
+  privileges: 1,
+  messages: [],
+  input: '',
+}];
+
 // 注册socket监听器
 const socketListener = () => {
-  // 收到用户消息
-  socket.value?.on('message', (data: Message) => {
-    console.log('收到消息!', data);
-    userMessageChange(data);
+  // 收到用户消息(私聊)
+  socket.value?.on('message-private', (data: Message) => {
+    privateChat(data);
+  });
+  // 多端同步消息(同一用户建立了多个连接)
+  socket.value?.on('message-private-sync', (data: Message) => {
+    privateChat(data, true);
   });
 };
 
@@ -161,17 +139,10 @@ const socketListener = () => {
 const send = (
   message: string,
   receive_user_id: string,
-  type: SocketType = 'text',
+  type: MessageType = 'text',
 ) => {
-  console.log('发送消息!', { message, receive_user_id, type });
   chatModelRef.value?.clearMessage();
-  socket.value?.emit('message', {
-    send_user_id: userStore.id,
-    receive_user_id: receive_user_id || userStore.id,
-    message,
-    type,
-  });
-  userMessageChange({ message, receive_user_id });
+  privateChat({ message, receive_user_id, type });
 };
 
 // 监听用户id的变化获取用户列表和连接socket

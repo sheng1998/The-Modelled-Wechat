@@ -1,3 +1,5 @@
-type SocketType = 'text' | 'image' | 'file' | 'link';
+type MessageType = 'text' | 'image' | 'file' | 'link';
 
-export type { SocketType };
+type SocketType = 'self' | 'private' | 'group' | 'robot'
+
+export type { MessageType, SocketType };

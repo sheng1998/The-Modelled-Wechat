@@ -4,8 +4,9 @@ import { Message, User } from '@/typings/user';
 // 文件传输助手
 const assistant = ref<User>({
   id: '',
+  isAssistant: true,
   username: '文件传输助手',
-  avatar: '',
+  avatar: 'icon-assistant',
   privileges: 1,
   messages: [],
   input: '',

@@ -1,17 +1,18 @@
-import { SocketType } from './socket';
+import { MessageType } from './socket';
 
 interface Message {
   id: string,
   send_user_id: string;
   receive_user_id: string;
   message: string,
-  type: SocketType;
+  type: MessageType;
   time: number | Date | string;
 }
 
 interface User {
   id: string;
   isRobot?: boolean;
+  isAssistant?: boolean;
   username: string;
   avatar: string;
   privileges: number;
