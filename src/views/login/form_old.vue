@@ -160,7 +160,7 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-@import './common.scss';
+@import './common';
 .form {
   .input-wrap {
     position: relative;
@@ -169,12 +169,13 @@ watch(
       margin-top: 28px;
     }
     &::after {
+      @include backgroundImage(right);
+
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 1px;
-      @include backgroundImage(right);
       content: '';
     }
     .error-tip {
@@ -187,31 +188,32 @@ watch(
   }
   input {
     width: 100%;
+    padding: 10px;
     border: none;
     outline: none;
-    padding: 10px;
   }
   .password {
     :deep(.el-icon) {
       position: absolute;
-      right: 10px;
       top: 50%;
+      right: 10px;
       transform: translateY(-50%);
       cursor: pointer;
     }
   }
   button {
+    @include backgroundImage(right);
+
     width: 100%;
     height: 36px;
     margin-top: 52px;
-    border-radius: 8px;
+    font-size: 16px;
+    color: #fff;
     border: none;
+    border-radius: 8px;
     outline: none;
     letter-spacing: 6px;
-    font-size: 16px;
     font-weight: 600;
-    color: #fff;
-    @include backgroundImage(right);
     cursor: pointer;
   }
 }

@@ -188,11 +188,12 @@ const notice = null;
 }
 .authority {
   width: 100%;
-  height: 100%;
   min-width: 400px;
+  height: 100%;
   min-height: 400px;
   .el-empty {
     height: 100%;
+    /* stylelint-disable-next-line selector-class-pattern */
     :deep(.el-empty__description) p {
       font-size: 18px;
     }

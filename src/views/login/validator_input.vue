@@ -118,32 +118,33 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import './common.scss';
+@import './common';
 .validator-input {
   position: relative;
   width: 100%;
   input {
     width: 100%;
+    padding: 10px;
     border: none;
     outline: none;
-    padding: 10px;
   }
   &.password {
     :deep(.el-icon) {
       position: absolute;
-      right: 10px;
       top: 50%;
+      right: 10px;
       transform: translateY(-50%);
       cursor: pointer;
     }
   }
   &::after {
+    @include backgroundImage(right);
+
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 1px;
-    @include backgroundImage(right);
     content: '';
   }
   .error-tip {

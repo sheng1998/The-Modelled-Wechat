@@ -88,23 +88,24 @@ defineExpose({ setErrorTip });
 </script>
 
 <style lang="scss" scoped>
-@import './common.scss';
+@import './common';
 .form {
   .validator-input + .validator-input {
     margin-top: 28px;
   }
   button {
+    @include backgroundImage(right);
+
     width: 100%;
     height: 36px;
     margin-top: 52px;
-    border-radius: 8px;
+    font-size: 16px;
+    color: #fff;
     border: none;
+    border-radius: 8px;
     outline: none;
     letter-spacing: 6px;
-    font-size: 16px;
     font-weight: 600;
-    color: #fff;
-    @include backgroundImage(right);
     cursor: pointer;
   }
 }

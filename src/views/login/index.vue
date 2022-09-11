@@ -98,11 +98,12 @@ const handleResponseError = (error?: {
 </script>
 
 <style lang="scss" scoped>
-@import './common.scss';
+@import './common';
 .login-or-register {
+  @include backgroundImage();
+
   width: 100%;
   height: 100%;
-  @include backgroundImage();
   .dialog {
     width: 360px;
     height: 500px;

@@ -57,12 +57,12 @@ defineProps({
   cursor: pointer;
   .avatar {
     flex-shrink: 0;
+    overflow: hidden;
     width: 40px;
     height: 40px;
     margin-right: 12px;
-    border-radius: 4px;
     background-color: #d8d8d8;
-    overflow: hidden;
+    border-radius: 4px;
     img {
       width: 100%;
       height: 100%;
@@ -76,9 +76,9 @@ defineProps({
   .time {
     flex-shrink: 0;
     width: 53px;
+    font-size: 12px;
     text-align: right;
     color: #b9b9b9;
-    font-size: 12px;
   }
   .message {
     width: 160px;

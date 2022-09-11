@@ -130,6 +130,7 @@ $footer-height: 150px;
 $footer-textarea-height: 110px;
 $footer-toolbar-height: 28px;
 $background-color: #f5f5f5;
+
 @mixin triangle-style($direction: left, $color: #fff, $size: 8px) {
   position: absolute;
   top: 10px;
@@ -138,6 +139,7 @@ $background-color: #f5f5f5;
   border-top: $size solid transparent;
   border-bottom: $size solid transparent;
   content: '';
+
   @if $direction == left {
     left: calc(-1 * #{$size});
     border-right: $size solid $color;
@@ -183,12 +185,12 @@ $background-color: #f5f5f5;
       }
       .avatar {
         flex-shrink: 0;
+        overflow: hidden;
         width: 40px;
         height: 40px;
         margin-right: 12px;
-        border-radius: 4px;
         background-color: #d8d8d8;
-        overflow: hidden;
+        border-radius: 4px;
         img {
           width: 100%;
           height: 100%;
@@ -206,8 +208,8 @@ $background-color: #f5f5f5;
       }
     }
     .message.my {
-      padding-left: 30%;
       float: right;
+      padding-left: 30%;
       .body {
         flex-direction: row-reverse;
       }
@@ -218,7 +220,7 @@ $background-color: #f5f5f5;
         }
       }
       .avatar {
-        margin-right: 0px;
+        margin-right: 0;
         margin-left: 12px;
       }
       .time {
@@ -226,8 +228,8 @@ $background-color: #f5f5f5;
       }
     }
     .robot.avatar {
-      background-color: #1677d2;
       color: #fff;
+      background-color: #1677d2;
       span {
         font-size: 22px;
       }
@@ -252,12 +254,13 @@ $background-color: #f5f5f5;
     }
     .el-textarea {
       height: $footer-textarea-height;
-      outline: none;
       border: none;
+      outline: none;
+      /* stylelint-disable-next-line selector-class-pattern */
       :deep(.el-textarea__inner) {
         border: none;
-        box-shadow: none;
         outline: none;
+        box-shadow: none;
       }
       :deep(textarea) {
         background-color: $background-color;

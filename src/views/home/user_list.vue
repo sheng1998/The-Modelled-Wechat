@@ -48,8 +48,8 @@ defineProps({
   }
   .assistant {
     :deep(.avatar) {
-      background-color: #2ba245;
       color: #fff;
+      background-color: #2ba245;
       span {
         font-size: 22px;
       }
@@ -57,8 +57,8 @@ defineProps({
   }
   .robot {
     :deep(.avatar) {
-      background-color: #1677d2;
       color: #fff;
+      background-color: #1677d2;
       span {
         font-size: 22px;
       }
