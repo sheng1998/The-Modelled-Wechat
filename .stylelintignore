@@ -1,0 +1,11 @@
+node_modules
+dist/
+test
+build/
+.vscode
+.github
+.history
+
+src/vite-env.d.ts
+src/assets/font/iconfont.css
+src/assets/css/normalize.css
