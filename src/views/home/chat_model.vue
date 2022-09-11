@@ -22,16 +22,13 @@
                   v-if="message.send_user_id === userStore.id"
                   :src="userStore.avatar || '/avatar/avatar_01.png'"
                   :alt="userStore.username"
-                >
+                />
                 <span v-else-if="user.isRobot" :class="['iconfont', user.avatar]"></span>
-                <img v-else :src="user.avatar || '/avatar/avatar_01.png'" :alt="user.username">
+                <img v-else :src="user.avatar || '/avatar/avatar_01.png'" :alt="user.username" />
               </div>
               <div class="content">
                 <!-- 处理换行事件 -->
-                <div
-                  v-for="(item, index) in message.message.split('\n')"
-                  :key="index"
-                >
+                <div v-for="(item, index) in message.message.split('\n')" :key="index">
                   {{ item || ' ' }}
                 </div>
               </div>
@@ -56,9 +53,7 @@
             @keyup.ctrl.enter="send"
           />
         </ElScrollbar>
-        <ElButton type="success" bg text @click="send">
-          发送
-        </ElButton>
+        <ElButton type="success" bg text @click="send"> 发送 </ElButton>
       </div>
     </template>
   </div>
@@ -66,9 +61,7 @@
 
 <script lang="ts" setup>
 import { PropType, ref, watch } from 'vue';
-import {
-  ElScrollbar, ElInput, ElButton, ElMessage,
-} from 'element-plus';
+import { ElScrollbar, ElInput, ElButton, ElMessage } from 'element-plus';
 import { formatTime } from '@/utils/time';
 import { User } from '@/typings/user';
 import { useUserStore } from '@/store/user';
@@ -119,12 +112,15 @@ const scrollbarToBottom = () => {
 
 defineExpose({ message, clearMessage, scrollbarToBottom });
 
-watch(() => props.user, (user) => {
-  clearMessage();
-  scrollbarToBottom();
-  inputFocus();
-  message.value = user?.input || '';
-});
+watch(
+  () => props.user,
+  (user) => {
+    clearMessage();
+    scrollbarToBottom();
+    inputFocus();
+    message.value = user?.input || '';
+  },
+);
 </script>
 
 <style lang="scss" scoped>
@@ -137,16 +133,15 @@ $background-color: #f5f5f5;
 @mixin triangle-style($direction: left, $color: #fff, $size: 8px) {
   position: absolute;
   top: 10px;
-  width:0;
-  height:0;
+  width: 0;
+  height: 0;
   border-top: $size solid transparent;
   border-bottom: $size solid transparent;
   content: '';
   @if $direction == left {
     left: calc(-1 * #{$size});
     border-right: $size solid $color;
-  }
-  @else {
+  } @else {
     right: calc(-1 * #{$size});
     border-left: $size solid $color;
   }

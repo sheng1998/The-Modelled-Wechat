@@ -1,10 +1,10 @@
 import { MessageType } from './socket';
 
 interface Message {
-  id: string,
+  id: string;
   send_user_id: string;
   receive_user_id: string;
-  message: string,
+  message: string;
   type: MessageType;
   time: number | Date | string;
 }

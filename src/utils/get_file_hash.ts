@@ -5,9 +5,8 @@ import sparkMd5 from 'spark-md5';
 type HashType = 'md5' | 'sha1' | 'sha224' | 'sha256';
 
 type Result = {
-  // eslint-disable-next-line no-unused-vars
-  [key in HashType]?: string
-}
+  [key in HashType]?: string;
+};
 
 // 获取文件Hash值(md5、sha1、sha224、sha256)
 const getFileHash = (file: File | Blob, hashList: HashType[] = ['md5']): Promise<Result> => {
@@ -86,38 +85,42 @@ const getFileHash = (file: File | Blob, hashList: HashType[] = ['md5']): Promise
 // 获取文件MD5值
 const getFileMD5 = (file: File | Blob): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file).then((result) => {
-      resolve(result.md5);
-    }).catch((error) => {
-      reject(error);
-    });
+    getFileHash(file)
+      .then((result) => {
+        resolve(result.md5);
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
-}
+};
 
 // 获取文件SHA1值
 const getFileSHA1 = (file: File | Blob): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file).then((result) => {
-      resolve(result.sha1);
-    }).catch((error) => {
-      reject(error);
-    });
+    getFileHash(file)
+      .then((result) => {
+        resolve(result.sha1);
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
-}
+};
 
 // 获取文件SHA256值
 const getFileSHA256 = (file: File | Blob): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file).then((result) => {
-      resolve(result.sha256);
-    }).catch((error) => {
-      reject(error);
-    });
+    getFileHash(file)
+      .then((result) => {
+        resolve(result.sha256);
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
-}
+};
 
 export default { getFileHash };
 
-export {
-  getFileHash, getFileMD5, getFileSHA1, getFileSHA256,
-};
+export { getFileHash, getFileMD5, getFileSHA1, getFileSHA256 };

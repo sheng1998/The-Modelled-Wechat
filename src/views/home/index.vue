@@ -2,10 +2,7 @@
   <div v-if="socket" class="home flex-center">
     <div class="wrap flex">
       <SideBar></SideBar>
-      <UserList
-        :user-list="userList"
-        @select="changeCurrentUser"
-      ></UserList>
+      <UserList :user-list="userList" @select="changeCurrentUser"></UserList>
       <ChatModel
         ref="chatModelRef"
         :class="{ 'right-border': notice }"
@@ -88,7 +85,9 @@ const changeCurrentUser = (user: User) => {
 
 // 获取用户列表
 const getUserList = async () => {
-  const { data: { data: list } } = await request.get('/user/list');
+  const {
+    data: { data: list },
+  } = await request.get('/user/list');
   // TODO 获取机器人列表（await）
   // 插入文件传输助手
   list.splice(0, 0, { ...assistant.value, id: userStore.id });
@@ -105,23 +104,26 @@ const getUserList = async () => {
 };
 
 // 获取机器人列表
-const getRobotList = async () => [{
-  id: '111111',
-  isRobot: true,
-  username: '机器人1',
-  avatar: 'icon-robot',
-  privileges: 1,
-  messages: [],
-  input: '',
-}, {
-  id: '22222',
-  isRobot: true,
-  username: '机器人2',
-  avatar: 'icon-robot2',
-  privileges: 1,
-  messages: [],
-  input: '',
-}];
+const getRobotList = async () => [
+  {
+    id: '111111',
+    isRobot: true,
+    username: '机器人1',
+    avatar: 'icon-robot',
+    privileges: 1,
+    messages: [],
+    input: '',
+  },
+  {
+    id: '22222',
+    isRobot: true,
+    username: '机器人2',
+    avatar: 'icon-robot2',
+    privileges: 1,
+    messages: [],
+    input: '',
+  },
+];
 
 // 注册socket监听器
 const socketListener = () => {
@@ -136,28 +138,28 @@ const socketListener = () => {
 };
 
 // 发送消息
-const send = (
-  message: string,
-  receive_user_id: string,
-  type: MessageType = 'text',
-) => {
+const send = (message: string, receive_user_id: string, type: MessageType = 'text') => {
   chatModelRef.value?.clearMessage();
   privateChat({ message, receive_user_id, type });
 };
 
 // 监听用户id的变化获取用户列表和连接socket
-watch(() => userStore.id, async (id) => {
-  if (!id) return;
-  getRobotList();
-  getUserList();
-  if (socket.value) return;
-  const connect = await socketConnection(id) as Socket<DefaultEventsMap, DefaultEventsMap>;
-  await sleep(200 - (Date.now() - startTime));
-  socket.value = connect;
-  socketListener();
-}, {
-  immediate: true,
-});
+watch(
+  () => userStore.id,
+  async (id) => {
+    if (!id) return;
+    getRobotList();
+    getUserList();
+    if (socket.value) return;
+    const connect = (await socketConnection(id)) as Socket<DefaultEventsMap, DefaultEventsMap>;
+    await sleep(200 - (Date.now() - startTime));
+    socket.value = connect;
+    socketListener();
+  },
+  {
+    immediate: true,
+  },
+);
 
 // TODO 用于记录公告信息
 const notice = null;

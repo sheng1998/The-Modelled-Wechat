@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts">
 import { PropType, reactive, ref } from 'vue';
 import { ElMessage, MessageHandler } from 'element-plus';
 import ValidatorInput from './validator_input.vue';
@@ -99,7 +99,7 @@ defineExpose({ setErrorTip });
     margin-top: 52px;
     border-radius: 8px;
     border: none;
-    outline:none;
+    outline: none;
     letter-spacing: 6px;
     font-size: 16px;
     font-weight: 600;

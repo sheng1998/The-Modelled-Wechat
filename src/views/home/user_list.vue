@@ -8,7 +8,7 @@
         :user="user"
         :class="{
           assistant: user.isAssistant,
-          robot: user.isRobot
+          robot: user.isRobot,
         }"
         @select="$emit('select', user)"
       >

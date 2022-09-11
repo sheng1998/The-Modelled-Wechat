@@ -5,7 +5,8 @@ const secretKey = 'sBUoieHX';
 
 // 加密
 // eslint-disable-next-line max-len
-const encrypt = (string: string, secret = secretKey) => TripleDES.encrypt(string, secret).toString();
+const encrypt = (string: string, secret = secretKey) =>
+  TripleDES.encrypt(string, secret).toString();
 
 // 解密
 // eslint-disable-next-line max-len

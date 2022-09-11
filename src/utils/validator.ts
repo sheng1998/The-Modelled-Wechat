@@ -4,16 +4,13 @@ type TRule<T = string> = {
   max?: number;
   regular?: RegExp;
   reverse?: boolean;
-  // eslint-disable-next-line no-unused-vars
   method?: (value: T) => boolean;
   message: string;
   [key: string]: unknown;
-}
+};
 
-export default function<T extends string | number> (rule: TRule<T>, value: T): string | undefined {
-  const {
-    required, min, max, regular, reverse, method, message,
-  } = rule;
+export default function <T extends string | number>(rule: TRule<T>, value: T): string | undefined {
+  const { required, min, max, regular, reverse, method, message } = rule;
   if (!value && required) return message;
   const { length } = String(value);
   if (min && max && (length < min || length > max)) return message;

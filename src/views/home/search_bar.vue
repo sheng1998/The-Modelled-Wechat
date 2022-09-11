@@ -28,9 +28,7 @@ const emits = defineEmits(['select']);
 const username = ref('');
 
 const querySearch = (keyword: string, cb: any) => {
-  const results = keyword
-    ? props.userList.filter(createFilter(keyword))
-    : props.userList;
+  const results = keyword ? props.userList.filter(createFilter(keyword)) : props.userList;
   cb(results);
 };
 
@@ -45,7 +43,6 @@ const createFilter = (keyword: string) => (user: User) => {
 const handleSelect = (user: any) => {
   emits('select', user);
 };
-
 </script>
 
 <style lang="scss" scoped>

@@ -16,29 +16,32 @@ const request = axios.create({
 // });
 
 // 响应拦截器
-request.interceptors.response.use((response) => {
-  // 2xx 范围内的状态码都会触发该函数。
-  if (response.data.code !== undefined && response.data.code !== 0) {
-    ElMessage.error({
-      message: response.data.message,
-      grouping: true,
-    });
-  }
-  return response;
-}, (error) => {
-  // 超出 2xx 范围的状态码都会触发该函数。
-  switch (error.response.status) {
-    case 500:
-      ElMessage.error({ message: '服务器异常！', grouping: true });
-      break;
-    default:
+request.interceptors.response.use(
+  (response) => {
+    // 2xx 范围内的状态码都会触发该函数。
+    if (response.data.code !== undefined && response.data.code !== 0) {
       ElMessage.error({
-        message: error.response?.data?.message || '未知错误！',
+        message: response.data.message,
         grouping: true,
       });
-      break;
-  }
-  return Promise.reject(error.response.data);
-});
+    }
+    return response;
+  },
+  (error) => {
+    // 超出 2xx 范围的状态码都会触发该函数。
+    switch (error.response.status) {
+      case 500:
+        ElMessage.error({ message: '服务器异常！', grouping: true });
+        break;
+      default:
+        ElMessage.error({
+          message: error.response?.data?.message || '未知错误！',
+          grouping: true,
+        });
+        break;
+    }
+    return Promise.reject(error.response.data);
+  },
+);
 
 export default request;

@@ -10,13 +10,15 @@ import { SocketType } from '@/typings/socket';
 
 export default function useMessage(
   socket: Ref<Socket<DefaultEventsMap, DefaultEventsMap> | null>,
-  userStore: Store<'user', {
-    id: string;
-    username: string;
-    avatar: string;
-    privileges: number;
-  }>,
-  // eslint-disable-next-line no-unused-vars
+  userStore: Store<
+    'user',
+    {
+      id: string;
+      username: string;
+      avatar: string;
+      privileges: number;
+    }
+  >,
   messageCallback: (data: Message, type: SocketType, method: 'receive' | 'send') => void,
 ) {
   // 私聊

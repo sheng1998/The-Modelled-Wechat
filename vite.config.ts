@@ -1,13 +1,10 @@
-const path = require('path');
+import path from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import legacy from '@vitejs/plugin-legacy';
-import { createHtmlPlugin } from 'vite-plugin-html'
-import {
-  createStyleImportPlugin,
-  ElementPlusResolve,
-} from 'vite-plugin-style-import';
+import { createHtmlPlugin } from 'vite-plugin-html';
+import { createStyleImportPlugin, ElementPlusResolve } from 'vite-plugin-style-import';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -35,7 +32,7 @@ export default defineConfig({
         'es.object.to-string',
         'web.dom-collections.for-each',
         'esnext.global-this',
-        'esnext.string.match-all'
+        'esnext.string.match-all',
       ],
       modernPolyfills: ['es.string.replace-all'],
     }),
@@ -109,7 +106,7 @@ export default defineConfig({
     // 配置路径别名
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '$style': path.resolve(__dirname, './src/assets/css'),
+      $style: path.resolve(__dirname, './src/assets/css'),
     },
   },
   base: './',

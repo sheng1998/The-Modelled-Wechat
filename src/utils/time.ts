@@ -23,7 +23,7 @@ type DiffUnit = 'D' | 'h' | 'm' | 's' | 'ms';
  * @returns {number} 时间戳，传入参数不合法将返回NaN
  */
 function getTimestamp(time: Time = Date.now(), unit: Unit = 'ms'): number {
-  return (new Date(time)).getTime() / (unit === 's' ? 1000 : 1);
+  return new Date(time).getTime() / (unit === 's' ? 1000 : 1);
 }
 
 /**
@@ -33,9 +33,7 @@ function getTimestamp(time: Time = Date.now(), unit: Unit = 'ms'): number {
  * @returns {number} 时间戳，传入参数不合法将返回NaN
  */
 function getDateStartTimestamp(time: Time = Date.now(), unit: Unit = 'ms'): number {
-  return new Date(
-    new Date(time).toLocaleDateString(),
-  ).getTime() / (unit === 's' ? 1000 : 1);
+  return new Date(new Date(time).toLocaleDateString()).getTime() / (unit === 's' ? 1000 : 1);
 }
 
 /**
@@ -45,9 +43,11 @@ function getDateStartTimestamp(time: Time = Date.now(), unit: Unit = 'ms'): numb
  * @returns {number} 时间戳，传入参数不合法将返回NaN
  */
 function getDateEndTimestamp(time: Time = Date.now(), unit: Unit = 'ms'): number {
-  return new Date(
-    new Date(time).toLocaleDateString(),
-  ).getTime() + 24 * 60 * 60 * (unit === 'ms' ? 1000 : 1) - 1;
+  return (
+    new Date(new Date(time).toLocaleDateString()).getTime() +
+    24 * 60 * 60 * (unit === 'ms' ? 1000 : 1) -
+    1
+  );
 }
 
 /**
@@ -113,18 +113,26 @@ function timeDifference(time1: Time, time2: Time, unit?: DiffUnit): number | str
     case 'm':
       return diffTimestamp / (1000 * 60);
     case 's':
-      return diffTimestamp / (1000);
+      return diffTimestamp / 1000;
     case 'ms':
       return diffTimestamp;
     default:
+      /* eslint-disable no-case-declarations */
       let ms = Math.abs(diffTimestamp);
       const D = Math.floor(ms / (1000 * 60 * 60 * 24));
       const h = Math.floor((ms - D * 1000 * 60 * 60 * 24) / (1000 * 60 * 60));
       const m = Math.floor((ms - D * 1000 * 60 * 60 * 24 - h * 1000 * 60 * 60) / (1000 * 60));
       // eslint-disable-next-line max-len
-      const s = Math.floor((ms - D * 1000 * 60 * 60 * 24 - h * 1000 * 60 * 60 - m * 1000 * 60) / 1000);
+      const s = Math.floor(
+        (ms - D * 1000 * 60 * 60 * 24 - h * 1000 * 60 * 60 - m * 1000 * 60) / 1000,
+      );
       ms %= 1000;
-      return `${D ? `${D}天` : ''}${h ? `${h}小时` : ''}${m ? `${m}分钟` : ''}${s ? `${s}秒` : ''}${ms ? `${ms}毫秒` : ''}` || '同一时刻';
+      return (
+        `${D ? `${D}天` : ''}${h ? `${h}小时` : ''}${m ? `${m}分钟` : ''}${s ? `${s}秒` : ''}${
+          ms ? `${ms}毫秒` : ''
+        }` || '同一时刻'
+      );
+    /* eslint-enable */
   }
 }
 
@@ -163,7 +171,11 @@ function timeToSimpleness(time: Time = Date.now()): string {
   if (isToday(time)) {
     return formatTime(time, 'hh:mm');
   }
-  const differenceDay = timeDifference(getDateStartTimestamp(time), getDateStartTimestamp(Date.now()), 'D');
+  const differenceDay = timeDifference(
+    getDateStartTimestamp(time),
+    getDateStartTimestamp(Date.now()),
+    'D',
+  );
   if (differenceDay === 1) {
     return '明天';
   }

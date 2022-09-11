@@ -11,7 +11,7 @@
       @focus="check('focus')"
       @input="check('input')"
       @keyup.enter="$emit('keyup-enter')"
-    >
+    />
     <div v-if="errorTip" class="error-tip">
       {{ errorTip }}
     </div>
@@ -22,10 +22,8 @@
   </div>
 </template>
 
-<script setup lang='ts'>
-import {
-  computed, onMounted, PropType, ref,
-} from 'vue';
+<script setup lang="ts">
+import { computed, onMounted, PropType, ref } from 'vue';
 import { ElIcon } from 'element-plus';
 import { View, Hide } from '@element-plus/icons-vue';
 import validator from '@/utils/validator';
@@ -110,9 +108,7 @@ const setErrorTip = (message: string) => {
   errorTip.value = message;
 };
 
-defineExpose({
-  errorTip, check, setErrorTip, focus,
-});
+defineExpose({ errorTip, check, setErrorTip, focus });
 
 onMounted(() => {
   if (props.autoFocus) {
@@ -129,15 +125,15 @@ onMounted(() => {
   input {
     width: 100%;
     border: none;
-    outline:none;
+    outline: none;
     padding: 10px;
   }
   &.password {
     :deep(.el-icon) {
       position: absolute;
       right: 10px;
-      top:50%;
-      transform:translateY(-50%);
+      top: 50%;
+      transform: translateY(-50%);
       cursor: pointer;
     }
   }

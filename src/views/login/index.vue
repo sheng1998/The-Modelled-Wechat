@@ -20,22 +20,21 @@
             class="change-type to-register"
             @click="changeType('register')"
             @mousedown="mousedown"
-          >去注册</span>
+            >去注册</span
+          >
         </div>
         <div v-else>
           <span>已有账号。</span>
-          <span
-            class="change-type to-login"
-            @click="changeType('login')"
-            @mousedown="mousedown"
-          >去登录</span>
+          <span class="change-type to-login" @click="changeType('login')" @mousedown="mousedown"
+            >去登录</span
+          >
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
@@ -64,26 +63,35 @@ const changeType = (value: 'login' | 'register') => {
 };
 
 const login = (username: string, password: string) => {
-  request.post('/user/login', { username, password }).then((res) => {
-    userStore.setUserInfo(res.data.data);
-    ElMessage.success('登陆成功！');
-    router.replace({ name: 'Home' });
-  }, (error) => {
-    handleResponseError(error);
-  });
+  request.post('/user/login', { username, password }).then(
+    (res) => {
+      userStore.setUserInfo(res.data.data);
+      ElMessage.success('登陆成功！');
+      router.replace({ name: 'Home' });
+    },
+    (error) => {
+      handleResponseError(error);
+    },
+  );
 };
 
 const register = (username: string, password: string) => {
-  request.post('/user/register', { username, password }).then((res) => {
-    userStore.setUserInfo(res.data.data);
-    ElMessage.success('注册成功，将自动登录并跳转首页！');
-    router.replace({ name: 'Home' });
-  }, (error) => {
-    handleResponseError(error);
-  });
+  request.post('/user/register', { username, password }).then(
+    (res) => {
+      userStore.setUserInfo(res.data.data);
+      ElMessage.success('注册成功，将自动登录并跳转首页！');
+      router.replace({ name: 'Home' });
+    },
+    (error) => {
+      handleResponseError(error);
+    },
+  );
 };
 
-const handleResponseError = (error?: { data: { type: 'username' | 'password' }, message: string}) => {
+const handleResponseError = (error?: {
+  data: { type: 'username' | 'password' };
+  message: string;
+}) => {
   if (!error || !error.data?.type) return;
   inputFromRef.value?.setErrorTip(error.data.type, error.message);
 };
@@ -110,7 +118,7 @@ const handleResponseError = (error?: { data: { type: 'username' | 'password' }, 
     }
     .footer {
       margin-top: 24px;
-      .change-type  {
+      .change-type {
         display: inline-block;
         padding-bottom: 1px;
         cursor: pointer;

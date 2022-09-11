@@ -3,7 +3,7 @@
     <!-- TODO 未读消息条数 -->
     <div class="avatar flex-center">
       <slot name="avatar">
-        <img :src="user.avatar || '/avatar/avatar_01.png'" :alt="user.username">
+        <img :src="user.avatar || '/avatar/avatar_01.png'" :alt="user.username" />
       </slot>
     </div>
     <div class="info">
@@ -21,7 +21,7 @@
       </div>
       <div v-if="user.messages.length || user.input" class="message ellipsis">
         <template v-if="user.input">
-          <span style="color: red;">[草稿]</span>
+          <span style="color: red">[草稿]</span>
           {{ user.input }}
         </template>
         <template v-else>

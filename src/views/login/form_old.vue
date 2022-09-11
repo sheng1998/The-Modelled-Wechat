@@ -2,7 +2,7 @@
 <template>
   <div class="form">
     <div class="input-wrap">
-      <input v-model="username" type="text" placeholder="用户名" @input="checkUsername">
+      <input v-model="username" type="text" placeholder="用户名" @input="checkUsername" />
       <div v-if="usernameErrorTip" class="error-tip">
         {{ usernameErrorTip }}
       </div>
@@ -13,7 +13,7 @@
         :type="passwordVisible ? 'text' : 'password'"
         placeholder="密码"
         @input="passwordChange"
-      >
+      />
       <div v-if="passwordErrorTip" class="error-tip">
         {{ passwordErrorTip }}
       </div>
@@ -28,7 +28,7 @@
         :type="passwordVisible ? 'text' : 'password'"
         placeholder="再次输入密码"
         @input="checkPasswordSame"
-      >
+      />
       <div v-if="password2ErrorTip" class="error-tip">
         {{ password2ErrorTip }}
       </div>
@@ -37,16 +37,12 @@
         <View v-else />
       </el-icon>
     </div>
-    <button v-if="type === 'login'" @click="toLogin">
-      登录
-    </button>
-    <button v-else @click="toRegister">
-      注册
-    </button>
+    <button v-if="type === 'login'" @click="toLogin">登录</button>
+    <button v-else @click="toRegister">注册</button>
   </div>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts">
 import { PropType, ref, watch } from 'vue';
 import { ElIcon, ElMessage } from 'element-plus';
 import { View, Hide } from '@element-plus/icons-vue';
@@ -99,7 +95,7 @@ const checkPassword = () => {
     errorTip = '密码长度限制在8-30字符之间！';
   } else if (/[\\/]/.test(password.value)) {
     errorTip = '密码禁止携带斜杠或括号！';
-  } else if (!(/([a-z].?\d)|(\d.?[a-z])/i.test(password.value))) {
+  } else if (!/([a-z].?\d)|(\d.?[a-z])/i.test(password.value)) {
     errorTip = '密码必需含有字母和数字！';
   }
   if (errorTip) {
@@ -151,13 +147,16 @@ const toRegister = () => {
   emit('register', username.value, password.value);
 };
 
-watch(() => props.type, () => {
-  usernameErrorTip.value = '';
-  passwordErrorTip.value = '';
-  password2ErrorTip.value = '';
-  passwordVisible.value = false;
-  messageTip.value?.close?.();
-});
+watch(
+  () => props.type,
+  () => {
+    usernameErrorTip.value = '';
+    passwordErrorTip.value = '';
+    password2ErrorTip.value = '';
+    passwordVisible.value = false;
+    messageTip.value?.close?.();
+  },
+);
 </script>
 
 <style lang="scss" scoped>
@@ -189,15 +188,15 @@ watch(() => props.type, () => {
   input {
     width: 100%;
     border: none;
-    outline:none;
+    outline: none;
     padding: 10px;
   }
   .password {
     :deep(.el-icon) {
       position: absolute;
       right: 10px;
-      top:50%;
-      transform:translateY(-50%);
+      top: 50%;
+      transform: translateY(-50%);
       cursor: pointer;
     }
   }
@@ -207,7 +206,7 @@ watch(() => props.type, () => {
     margin-top: 52px;
     border-radius: 8px;
     border: none;
-    outline:none;
+    outline: none;
     letter-spacing: 6px;
     font-size: 16px;
     font-weight: 600;

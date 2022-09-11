@@ -16,7 +16,6 @@ export const useUserStore = defineStore({
     setUserInfo(info: Partial<User>) {
       for (const key in info) {
         if (Object.prototype.hasOwnProperty.call(info, key)) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           this[key] = info[key];
         }
