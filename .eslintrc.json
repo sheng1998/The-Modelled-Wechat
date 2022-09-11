@@ -2,15 +2,13 @@
   "env": {
     "browser": true,
     "es2021": true,
-    "node": true,
-    // 开启setup语法糖环境
-    "vue/setup-compiler-macros": true
+    "node": true
   },
   "extends": [
     "eslint:recommended",
-    "plugin:vue/vue3-recommended",
+    "plugin:vue/vue3-essential",
     "plugin:@typescript-eslint/recommended",
-    "airbnb"
+    "plugin:prettier/recommended"
   ],
   "parser": "vue-eslint-parser",
   "parserOptions": {
@@ -18,53 +16,13 @@
     "parser": "@typescript-eslint/parser",
     "sourceType": "module"
   },
-  "plugins": [
-    "vue",
-    "@typescript-eslint"
-  ],
-  "settings": {
-    "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
-    },
-    "import/resolver": {
-      "node": {
-        "extensions": [".js", ".ts", ".tsx", ".vue"]
-      }
-    }
-  },
+  "plugins": ["vue", "@typescript-eslint"],
   "rules": {
+    // 关闭禁止使用ts注释的校验
+    "@typescript-eslint/ban-ts-comment": "off",
     // 忽略检测换行风格
     "linebreak-style": "off",
-    // 关闭html属性自动换行规则
-    "vue/max-attributes-per-line": "off",
-    // 修改html标签自闭合规则
-    "vue/html-self-closing": [
-      "error",
-      {
-        "html": {
-          "void": "never",
-          "normal": "any",
-          "component": "any"
-        },
-        "svg": "always",
-        "math": "always"
-      }
-    ],
-    // 别名引入会报错，暂时关闭该规则（尚未找到好的解决办法）
-    "import/no-unresolved": "off",
-    "import/extensions": "off",
-    "import/prefer-default-export": "off",
-    "vue/multi-word-component-names": "off",
-    "no-continue": "off",
-    "no-use-before-define": "off",
-    "default-case": "off",
-    "vue/require-default-prop": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "no-restricted-syntax": "off",
-    "no-param-reassign": "off",
-    "no-case-declarations": "off",
-    "camelcase": "off",
-    "@typescript-eslint/ban-ts-comment": "off"
+    // 关闭 vue 组件文件名必需要是multi格式校验(建议不要这么做)
+    "vue/multi-word-component-names": "off"
   }
 }

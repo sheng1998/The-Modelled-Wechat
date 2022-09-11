@@ -3,6 +3,7 @@ dist/
 test
 build/
 .vscode
+.github
 .history
 
 src/vite-env.d.ts
