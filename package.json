@@ -7,13 +7,15 @@
   "scripts": {
     "eslint": "eslint . --ext .js,.jsx,.ts,.tsx,.vue",
     "eslint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx,.vue",
-    "lint": "npm run eslint & npm run lint:style",
-    "lint:fix": "npm run eslint:fix & npm run lint:style:fix",
-    "lint:style": "stylelint \"./**/*.{css,less,vue,html}\"",
-    "lint:style:fix": "stylelint \"./**/*.{css,less,vue,html}\" --fix",
+    "lint": "npm run eslint & npm run stylelint",
+    "lint:fix": "npm run eslint:fix & npm run stylelint:fix",
+    "stylelint": "stylelint \"./**/*.{css,less,vue,html}\"",
+    "stylelint:fix": "stylelint \"./**/*.{css,less,vue,html}\" --fix",
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.6",
@@ -30,6 +32,8 @@
     "vue-router": "^4.1.3"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
     "@types/crypto-js": "^4.1.1",
     "@types/node": "^17.0.30",
     "@types/spark-md5": "^3.0.2",
@@ -42,6 +46,8 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.4.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
     "postcss": "^8.4.16",
     "postcss-html": "^1.5.0",
     "postcss-scss": "^4.0.4",
