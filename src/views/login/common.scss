@@ -1,5 +1,6 @@
 $pink: #fbc2eb;
 $blue: #a6c1ee;
+
 @mixin backgroundImage($to: bottom) {
   background-image: linear-gradient(to $to, $pink 0%, $blue 100%);
 }
