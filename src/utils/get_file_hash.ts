@@ -9,8 +9,8 @@ type Result = {
 };
 
 // 获取文件Hash值(md5、sha1、sha224、sha256)
-const getFileHash = (file: File | Blob, hashList: HashType[] = ['md5']): Promise<Result> => {
-  if (hashList.length <= 0) {
+const getFileHash = (file: File | Blob, hashs: HashType[] = ['md5']): Promise<Result> => {
+  if (hashs.length <= 0) {
     throw new Error('至少需要计算一个hash值!');
   }
   return new Promise((resolve, reject) => {
@@ -23,10 +23,10 @@ const getFileHash = (file: File | Blob, hashList: HashType[] = ['md5']): Promise
     let currentIndex = 0;
 
     // 需要获取的时候才初始化
-    const spark = hashList.includes('md5') ? new sparkMd5.ArrayBuffer() : null;
-    const alogSha1 = hashList.includes('sha1') ? cryptoJs.algo.SHA1.create() : null;
-    const alogSha224 = hashList.includes('sha224') ? cryptoJs.algo.SHA224.create() : null;
-    const alogSha256 = hashList.includes('sha256') ? cryptoJs.algo.SHA256.create() : null;
+    const spark = hashs.includes('md5') ? new sparkMd5.ArrayBuffer() : null;
+    const alogSha1 = hashs.includes('sha1') ? cryptoJs.algo.SHA1.create() : null;
+    const alogSha224 = hashs.includes('sha224') ? cryptoJs.algo.SHA224.create() : null;
+    const alogSha256 = hashs.includes('sha256') ? cryptoJs.algo.SHA256.create() : null;
 
     const fileReader = new FileReader();
 
@@ -98,7 +98,7 @@ const getFileMD5 = (file: File | Blob): Promise<string | undefined> => {
 // 获取文件SHA1值
 const getFileSHA1 = (file: File | Blob): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file)
+    getFileHash(file, ['sha1'])
       .then((result) => {
         resolve(result.sha1);
       })
@@ -111,7 +111,7 @@ const getFileSHA1 = (file: File | Blob): Promise<string | undefined> => {
 // 获取文件SHA256值
 const getFileSHA256 = (file: File | Blob): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file)
+    getFileHash(file, ['sha256'])
       .then((result) => {
         resolve(result.sha256);
       })
