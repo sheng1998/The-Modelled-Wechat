@@ -8,8 +8,14 @@ type Result = {
   [key in HashType]?: string;
 };
 
+type CallBack = (progress: number) => void;
+
 // 获取文件Hash值(md5、sha1、sha224、sha256)
-const getFileHash = (file: File | Blob, hashs: HashType | HashType[] = 'md5'): Promise<Result> => {
+const getFileHash = (
+  file: File | Blob,
+  hashs: HashType | HashType[] = 'md5',
+  cb?: CallBack,
+): Promise<Result> => {
   if (typeof hashs === 'string') {
     hashs = [hashs];
   } else if (hashs.length <= 0) {
@@ -49,6 +55,12 @@ const getFileHash = (file: File | Blob, hashs: HashType | HashType[] = 'md5'): P
       }
 
       currentIndex += 1;
+
+      // 记录当前获取进度
+      if (typeof cb === 'function') {
+        cb(currentIndex / totalChunk);
+      }
+
       if (currentIndex < totalChunk) {
         loadNextChunk();
       } else {
@@ -85,9 +97,9 @@ const getFileHash = (file: File | Blob, hashs: HashType | HashType[] = 'md5'): P
 };
 
 // 获取文件MD5值
-const getFileMD5 = (file: File | Blob): Promise<string | undefined> => {
+const getFileMD5 = (file: File | Blob, cb?: CallBack): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file, 'md5')
+    getFileHash(file, 'md5', cb)
       .then((result) => {
         resolve(result.md5);
       })
@@ -98,9 +110,9 @@ const getFileMD5 = (file: File | Blob): Promise<string | undefined> => {
 };
 
 // 获取文件SHA1值
-const getFileSHA1 = (file: File | Blob): Promise<string | undefined> => {
+const getFileSHA1 = (file: File | Blob, cb?: CallBack): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file, 'sha1')
+    getFileHash(file, 'sha1', cb)
       .then((result) => {
         resolve(result.sha1);
       })
@@ -111,9 +123,9 @@ const getFileSHA1 = (file: File | Blob): Promise<string | undefined> => {
 };
 
 // 获取文件SHA256值
-const getFileSHA256 = (file: File | Blob): Promise<string | undefined> => {
+const getFileSHA256 = (file: File | Blob, cb?: CallBack): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file, 'sha256')
+    getFileHash(file, 'sha256', cb)
       .then((result) => {
         resolve(result.sha256);
       })
