@@ -9,8 +9,10 @@ type Result = {
 };
 
 // 获取文件Hash值(md5、sha1、sha224、sha256)
-const getFileHash = (file: File | Blob, hashs: HashType[] = ['md5']): Promise<Result> => {
-  if (hashs.length <= 0) {
+const getFileHash = (file: File | Blob, hashs: HashType | HashType[] = 'md5'): Promise<Result> => {
+  if (typeof hashs === 'string') {
+    hashs = [hashs];
+  } else if (hashs.length <= 0) {
     throw new Error('至少需要计算一个hash值!');
   }
   return new Promise((resolve, reject) => {
@@ -85,7 +87,7 @@ const getFileHash = (file: File | Blob, hashs: HashType[] = ['md5']): Promise<Re
 // 获取文件MD5值
 const getFileMD5 = (file: File | Blob): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file)
+    getFileHash(file, 'md5')
       .then((result) => {
         resolve(result.md5);
       })
@@ -98,7 +100,7 @@ const getFileMD5 = (file: File | Blob): Promise<string | undefined> => {
 // 获取文件SHA1值
 const getFileSHA1 = (file: File | Blob): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file, ['sha1'])
+    getFileHash(file, 'sha1')
       .then((result) => {
         resolve(result.sha1);
       })
@@ -111,7 +113,7 @@ const getFileSHA1 = (file: File | Blob): Promise<string | undefined> => {
 // 获取文件SHA256值
 const getFileSHA256 = (file: File | Blob): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file, ['sha256'])
+    getFileHash(file, 'sha256')
       .then((result) => {
         resolve(result.sha256);
       })
