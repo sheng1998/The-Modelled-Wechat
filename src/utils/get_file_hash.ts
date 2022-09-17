@@ -1,3 +1,7 @@
+/**
+ * 获取文件的 hash 值
+ * 目前支持获取文件的 md5、sha1、sha224、sha256 值
+ */
 import cryptoJs from 'crypto-js';
 import encHex from 'crypto-js/enc-hex';
 import sparkMd5 from 'spark-md5';
