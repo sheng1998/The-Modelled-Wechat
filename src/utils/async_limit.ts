@@ -1,14 +1,14 @@
 /**
  * 异步并发限制
- * @param {number} limit 限制每次最多允许同时执行的数量
  * @param {Function[]} list 异步并发函数组成的数组(promise数组)
+ * @param {number} limit 限制每次最多允许同时执行的数量
  * @param {number} errorTime 每个异步事件允许失败的次数(超过指定次数后不会再执行该异步事件), 默认值为3
  * @param {Function} cb [index, progress, current, error_time, results]
  * cb 函数用于返回当前执行的结果包括当前进度、当前结果、已执行的结果
  */
 const asyncLimit = (
-  limit: number,
   list: (() => Promise<unknown>)[],
+  limit = 3,
   errorTime = 3,
   cb?: (
     index: number,
