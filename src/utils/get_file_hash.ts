@@ -15,21 +15,21 @@ type Result = {
 type CallBack = (progress: number) => void;
 
 // 获取文件Hash值(md5、sha1、sha224、sha256)
-const getFileHash = (
+const getFileHash = <T extends HashType[]>(
   file: File | Blob,
-  hashs: HashType | HashType[] = 'md5',
+  hashs: T,
   cb?: CallBack,
-): Promise<Result> => {
-  if (typeof hashs === 'string') {
-    hashs = [hashs];
-  } else if (hashs.length <= 0) {
+): Promise<{
+  [P in T[number]]: string;
+}> => {
+  if (hashs.length <= 0) {
     throw new Error('至少需要计算一个hash值!');
   }
   return new Promise((resolve, reject) => {
     // @ts-ignore
     const blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
     // 文件切片计算MD5, 防止内存泄露(标签页崩溃)
-    const chunkSize = 5 * 1024 * 1024; // 每个切片 5MB
+    const chunkSize = 20 * 1024 * 1024; // 每个切片最大为 20MB
     const totalChunk = Math.ceil(file.size / chunkSize);
     // 指针, 用于记录当前处理到第几个分片
     let currentIndex = 0;
@@ -81,7 +81,11 @@ const getFileHash = (
         if (alogSha256) {
           data.sha256 = encHex.stringify(alogSha256.finalize());
         }
-        resolve(data);
+        resolve(
+          data as {
+            [P in T[number]]: string;
+          },
+        );
       }
     };
 
@@ -103,7 +107,7 @@ const getFileHash = (
 // 获取文件MD5值
 const getFileMD5 = (file: File | Blob, cb?: CallBack): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file, 'md5', cb)
+    getFileHash(file, ['md5'], cb)
       .then((result) => {
         resolve(result.md5);
       })
@@ -116,7 +120,7 @@ const getFileMD5 = (file: File | Blob, cb?: CallBack): Promise<string | undefine
 // 获取文件SHA1值
 const getFileSHA1 = (file: File | Blob, cb?: CallBack): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file, 'sha1', cb)
+    getFileHash(file, ['sha1'], cb)
       .then((result) => {
         resolve(result.sha1);
       })
@@ -129,7 +133,7 @@ const getFileSHA1 = (file: File | Blob, cb?: CallBack): Promise<string | undefin
 // 获取文件SHA256值
 const getFileSHA256 = (file: File | Blob, cb?: CallBack): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    getFileHash(file, 'sha256', cb)
+    getFileHash(file, ['sha256'], cb)
       .then((result) => {
         resolve(result.sha256);
       })
@@ -139,6 +143,6 @@ const getFileSHA256 = (file: File | Blob, cb?: CallBack): Promise<string | undef
   });
 };
 
-export default { getFileHash };
+export default getFileHash;
 
 export { getFileHash, getFileMD5, getFileSHA1, getFileSHA256 };
