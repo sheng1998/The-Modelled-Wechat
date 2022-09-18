@@ -39,8 +39,7 @@
       <div :class="['footer', { 'has-toolbar': !user.isRobot }]" @click="inputFocus">
         <div v-if="!user.isRobot" class="toolbar flex-vertical-center">
           <span class="iconfont icon-emoji"></span>
-          <span class="iconfont icon-image"></span>
-          <span class="iconfont icon-file"></span>
+          <span class="iconfont icon-file" @click="selectFile"></span>
         </div>
         <ElScrollbar>
           <el-input
@@ -65,6 +64,7 @@ import { ElScrollbar, ElInput, ElButton, ElMessage } from 'element-plus';
 import { formatTime } from '@/utils/time';
 import { User } from '@/typings/user';
 import { useUserStore } from '@/store/user';
+import useFile from './use/use_file';
 
 const emits = defineEmits(['send']);
 
@@ -109,6 +109,8 @@ const scrollbarToBottom = () => {
     scrollbarRef.value?.update();
   }, 0);
 };
+
+const { selectFile } = useFile();
 
 defineExpose({ message, clearMessage, scrollbarToBottom });
 
